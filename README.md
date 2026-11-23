@@ -143,7 +143,10 @@ Korpus disusun dari empat sumber:
 Setiap *chunk* menyimpan medan `sumber`, `halaman`, dan `lisensi` agar atribusi
 dapat ditelusuri sampai halaman asalnya. Lisensi CC BY-NC-SA 3.0 IGO bersifat
 **non-komersial** dan **berbagi serupa**; distribusi di luar konteks akademik
-perlu memperhatikan kedua syarat itu.
+perlu memperhatikan kedua syarat itu. Rincian lengkap ada di [`NOTICE.md`](NOTICE.md).
+
+Kode dan data karya sendiri dilisensikan MIT (lihat [`LICENSE`](LICENSE)).
+Lisensi MIT **tidak** mencakup teks WHO di dalam `data/korpus.json`.
 
 Repositori ini tidak memuat kredensial, kunci API, maupun data pribadi. Semua
 kueri uji adalah adaptasi dari ESConv, bukan tulisan pengguna sungguhan.
