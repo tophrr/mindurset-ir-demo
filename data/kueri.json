@@ -1,0 +1,802 @@
+[
+ {
+  "qid": "q-id-001",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "belakangan ini aku ngerasa hampa banget, bahkan hal yang biasanya aku suka gak bikin semangat lagi",
+  "token": 19,
+  "kata": 16
+ },
+ {
+  "qid": "q-id-002",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "aku capek banget sama diri sendiri, tiap hari rasanya berat buat bangun dan ngapa-ngapain",
+  "token": 20,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-003",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "udah sebulan ini moodku jelek terus, aku cuma pengen tidur seharian dan gak ketemu siapa-siapa",
+  "token": 21,
+  "kata": 15
+ },
+ {
+  "qid": "q-id-004",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "aku ngerasa hidupku gak ada artinya, semua yang aku lakuin rasanya percuma",
+  "token": 16,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-005",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "ada perasaan kosong yang susah aku jelasin, kayak aku jalan tapi gak ada tujuannya",
+  "token": 17,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-006",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "aku pengen nangis tiap malam tapi gak tahu kenapa, paginya harus tetap masuk kelas",
+  "token": 17,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-007",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "semua yang dulu bikin aku seneng sekarang rasanya datar aja",
+  "token": 11,
+  "kata": 10
+ },
+ {
+  "qid": "q-id-008",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "aku ngerasa sendirian walaupun banyak teman, susah banget cerita ke orang",
+  "token": 14,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-009",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "aku kayak kehilangan semangat, males ngapa-ngapain, tugas numpuk tapi aku diem aja",
+  "token": 21,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-010",
+  "bahasa": "id",
+  "topik": "depresi",
+  "teks": "kadang aku mikir apa gunanya aku ada, rasanya semua orang lebih baik tanpa aku",
+  "token": 17,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-011",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "nilai uts ku jatuh banget, aku takut gak bisa lulus mata kuliah ini",
+  "token": 15,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-012",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "aku udah belajar tiap malam tapi tetap gak paham, rasanya aku bodoh banget",
+  "token": 14,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-013",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "skripsi ku mandek dari dua bulan lalu, tiap buka laptop langsung panik",
+  "token": 15,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-014",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "besok sidang proposal dan aku belum siap sama sekali, jantungku deg-degan terus",
+  "token": 18,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-015",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "dosen pembimbing susah ditemui, aku jadi takut gak lulus tahun ini",
+  "token": 14,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-016",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "aku kayaknya salah jurusan, tiap kuliah aku ngerasa gak cocok dan gak mampu",
+  "token": 16,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-017",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "semester ini aku ambil banyak sks, sekarang aku kewalahan dan gak bisa ngerjain apa-apa",
+  "token": 23,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-018",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "tugas kelompok numpuk, aku ngerjain sendiri hampir semuanya dan itu bikin aku kesal",
+  "token": 19,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-019",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "aku takut presentasi besok, takut kalau teman-teman ngetawain aku di depan kelas",
+  "token": 19,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-020",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "nilai ipk ku turun, orang tuaku pasti kecewa, aku gak berani ngomong ke mereka",
+  "token": 18,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-021",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "aku udah dua kali gagal mata kuliah ini, sekarang aku males banget ngulang",
+  "token": 16,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-022",
+  "bahasa": "id",
+  "topik": "akademik",
+  "teks": "besok ada ujian dan aku sama sekali gak bisa fokus, pikiranku kemana-mana",
+  "token": 18,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-023",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "magang ku selesai bulan depan, aku belum dapat kerjaan dan uang tabungan makin habis",
+  "token": 18,
+  "kata": 14
+ },
+ {
+  "qid": "q-id-024",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "aku takut di phk, tiap rapat atasan selalu nyindir soal performa",
+  "token": 16,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-025",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "biaya kuliah semester depan belum ada, orang tuaku juga sedang susah",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-026",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "aku kerja sambil kuliah dan sekarang rasanya gak sanggup lagi, badan capek terus",
+  "token": 15,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-027",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "aku baru mulai kerja dan ngerasa gak kompeten, tiap hari takut salah",
+  "token": 15,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-028",
+  "bahasa": "id",
+  "topik": "karier",
+  "teks": "gajiku habis buat kebutuhan, aku bingung harus ngatur gimana",
+  "token": 12,
+  "kata": 9
+ },
+ {
+  "qid": "q-id-029",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "aku baru putus, dia bilang udah gak nyaman, tapi aku masih mikirin dia tiap hari",
+  "token": 18,
+  "kata": 15
+ },
+ {
+  "qid": "q-id-030",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "pacar ku jarang bales chat sekarang, aku takut dia selingkuh",
+  "token": 15,
+  "kata": 10
+ },
+ {
+  "qid": "q-id-031",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "orang tuaku gak setuju hubungan kami, aku bingung harus pilih siapa",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-032",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "kami pacaran lima tahun tapi sekarang kayak gak ada obrolan lagi",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-033",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "aku ketemu mantan di kampus dan sejak itu pikiranku kacau lagi",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-034",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "dia ninggalin aku tanpa alasan yang jelas, aku ngerasa gak berharga",
+  "token": 15,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-035",
+  "bahasa": "id",
+  "topik": "relasi",
+  "teks": "aku takut kehilangan dia, tiap dia pergi aku cemas berlebihan",
+  "token": 12,
+  "kata": 10
+ },
+ {
+  "qid": "q-id-036",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "teman-teman ku kayak menjauh sejak aku jarang ikut nongkrong",
+  "token": 15,
+  "kata": 9
+ },
+ {
+  "qid": "q-id-037",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "aku ngerasa gak punya teman dekat, di kampus cuma ngobrol basa-basi",
+  "token": 16,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-038",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "aku dituduh nyebarin rahasia teman, padahal bukan aku, dan sekarang mereka diemin aku",
+  "token": 19,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-039",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "teman sekamarku berisik terus sampai malam, aku gak bisa istirahat dan jadi kesal",
+  "token": 18,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-040",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "aku selalu jadi orang yang ngalah di circle ku, sekarang aku capek",
+  "token": 16,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-041",
+  "bahasa": "id",
+  "topik": "pertemanan",
+  "teks": "aku takut ngomong di grup karena pernah ditertawakan waktu ngasih pendapat",
+  "token": 16,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-042",
+  "bahasa": "id",
+  "topik": "keluarga",
+  "teks": "orang tuaku bertengkar terus di rumah, aku gak betah dan susah fokus",
+  "token": 17,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-043",
+  "bahasa": "id",
+  "topik": "keluarga",
+  "teks": "aku selalu dibandingin sama kakak ku, rasanya aku gak pernah cukup",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-044",
+  "bahasa": "id",
+  "topik": "keluarga",
+  "teks": "aku harus jaga adik-adik sambil kuliah, sekarang tenagaku habis",
+  "token": 14,
+  "kata": 9
+ },
+ {
+  "qid": "q-id-045",
+  "bahasa": "id",
+  "topik": "keluarga",
+  "teks": "ibuku sakit dan aku jauh dari rumah, aku ngerasa bersalah terus",
+  "token": 14,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-046",
+  "bahasa": "id",
+  "topik": "tidur",
+  "teks": "udah seminggu ini aku susah tidur, kepalaku penuh pikiran sampai pagi",
+  "token": 13,
+  "kata": 11
+ },
+ {
+  "qid": "q-id-047",
+  "bahasa": "id",
+  "topik": "tidur",
+  "teks": "aku selalu bangun jam tiga dan gak bisa tidur lagi, besok harus ujian",
+  "token": 15,
+  "kata": 13
+ },
+ {
+  "qid": "q-id-048",
+  "bahasa": "id",
+  "topik": "tidur",
+  "teks": "aku butuh main hp dulu biar ngantuk, tapi malah jadi makin malam",
+  "token": 14,
+  "kata": 12
+ },
+ {
+  "qid": "q-id-049",
+  "bahasa": "id",
+  "topik": "tidur",
+  "teks": "tidurku berantakan, siang ngantuk banget dan malam malah segar",
+  "token": 14,
+  "kata": 9
+ },
+ {
+  "qid": "q-id-050",
+  "bahasa": "id",
+  "topik": "tidur",
+  "teks": "aku capek tapi gak bisa tidur, tiap tutup mata yang kepikiran malah tugas",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-001",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "lately I feel empty, even things I used to enjoy do not interest me at all",
+  "token": 18,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-002",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "I am so tired of myself, getting through an ordinary day feels heavier than it should",
+  "token": 20,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-003",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "for a month my mood has stayed low and I just want to sleep and avoid everyone",
+  "token": 18,
+  "kata": 17
+ },
+ {
+  "qid": "q-en-004",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "some days I wonder what the point of any of this is",
+  "token": 12,
+  "kata": 12
+ },
+ {
+  "qid": "q-en-005",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "there is an emptiness I cannot really explain, like I am moving without a direction",
+  "token": 18,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-006",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "I want to cry at night and cannot say why, then I have to sit in class the next morning",
+  "token": 21,
+  "kata": 20
+ },
+ {
+  "qid": "q-en-007",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "everything that used to make me happy now feels flat",
+  "token": 11,
+  "kata": 10
+ },
+ {
+  "qid": "q-en-008",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "I feel alone even though I have friends, I cannot bring myself to tell them anything",
+  "token": 17,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-009",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "I have lost all momentum, work keeps piling up and I just stare at it",
+  "token": 19,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-010",
+  "bahasa": "en",
+  "topik": "depresi",
+  "teks": "sometimes I think people would be better off without me around",
+  "token": 11,
+  "kata": 11
+ },
+ {
+  "qid": "q-en-011",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "my midterm score dropped badly and now I worry about failing this course",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-012",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "I study every night and still do not understand, it makes me feel stupid",
+  "token": 15,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-013",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "my thesis has been stuck for two months, opening the laptop makes me panic",
+  "token": 16,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-014",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "my proposal defence is tomorrow and I am not ready, my heart keeps racing",
+  "token": 19,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-015",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "my supervisor is impossible to reach, I am scared I will not graduate this year",
+  "token": 18,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-016",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "I think I chose the wrong major, every class feels like proof I do not belong",
+  "token": 20,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-017",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "I took too many credits this term and now I cannot finish anything",
+  "token": 14,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-018",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "group work keeps landing on me, I end up doing almost all of it and I resent it",
+  "token": 21,
+  "kata": 18
+ },
+ {
+  "qid": "q-en-019",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "I have to present tomorrow and I am terrified people will laugh at me",
+  "token": 16,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-020",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "my grades slipped and my parents will be disappointed, I cannot tell them",
+  "token": 16,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-021",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "I failed this course twice and now I cannot make myself try again",
+  "token": 13,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-022",
+  "bahasa": "en",
+  "topik": "akademik",
+  "teks": "there is an exam tomorrow and my mind will not stay on the material",
+  "token": 14,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-023",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "my internship ends next month, I have no offer yet and my savings are almost gone",
+  "token": 20,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-024",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "I am afraid of being laid off, my manager keeps hinting at performance",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-025",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "next semester tuition is not covered and my parents are struggling too",
+  "token": 13,
+  "kata": 12
+ },
+ {
+  "qid": "q-en-026",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "working while studying has worn me out, I am tired all the time",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-027",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "I just started this job and feel incompetent, I am scared of making mistakes",
+  "token": 18,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-028",
+  "bahasa": "en",
+  "topik": "karier",
+  "teks": "my salary is gone before the month ends and I do not know how to manage it",
+  "token": 19,
+  "kata": 17
+ },
+ {
+  "qid": "q-en-029",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "we split up last week and I still think about them every day",
+  "token": 13,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-030",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "my partner replies less and less and I am afraid they are seeing someone else",
+  "token": 16,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-031",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "my parents do not approve of my relationship and I do not know whose side to take",
+  "token": 18,
+  "kata": 17
+ },
+ {
+  "qid": "q-en-032",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "we have been together five years and now there is nothing left to talk about",
+  "token": 15,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-033",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "I ran into my ex on campus and my head has been a mess since",
+  "token": 16,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-034",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "they left without a clear reason and I keep feeling I was not worth staying for",
+  "token": 17,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-035",
+  "bahasa": "en",
+  "topik": "relasi",
+  "teks": "I panic whenever they leave, I am scared of losing them constantly",
+  "token": 16,
+  "kata": 12
+ },
+ {
+  "qid": "q-en-036",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "my friends seem to have drifted away since I stopped joining them",
+  "token": 14,
+  "kata": 12
+ },
+ {
+  "qid": "q-en-037",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "I do not have a close friend here, campus conversations stay polite and empty",
+  "token": 17,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-038",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "my friends think I shared something private, it was not me, and now they ignore me",
+  "token": 18,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-039",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "my roommate is loud until midnight, I cannot rest and it is making me irritable",
+  "token": 20,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-040",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "I am always the one who gives in, and I am tired of it",
+  "token": 15,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-041",
+  "bahasa": "en",
+  "topik": "pertemanan",
+  "teks": "I am scared to speak in the group chat after being laughed at once",
+  "token": 16,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-042",
+  "bahasa": "en",
+  "topik": "keluarga",
+  "teks": "my parents fight constantly at home and I cannot focus on anything",
+  "token": 12,
+  "kata": 12
+ },
+ {
+  "qid": "q-en-043",
+  "bahasa": "en",
+  "topik": "keluarga",
+  "teks": "I am always compared to my older sibling and I never feel enough",
+  "token": 14,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-044",
+  "bahasa": "en",
+  "topik": "keluarga",
+  "teks": "I look after my younger siblings while studying and I have nothing left",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-045",
+  "bahasa": "en",
+  "topik": "keluarga",
+  "teks": "my mother is ill and I am far from home, the guilt does not stop",
+  "token": 17,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-046",
+  "bahasa": "en",
+  "topik": "tidur",
+  "teks": "I have not slept properly for a week, my head is full until morning",
+  "token": 16,
+  "kata": 14
+ },
+ {
+  "qid": "q-en-047",
+  "bahasa": "en",
+  "topik": "tidur",
+  "teks": "I wake at three and cannot fall back asleep, and I have an exam tomorrow",
+  "token": 17,
+  "kata": 15
+ },
+ {
+  "qid": "q-en-048",
+  "bahasa": "en",
+  "topik": "tidur",
+  "teks": "I need my phone to feel sleepy and then suddenly it is two in the morning",
+  "token": 17,
+  "kata": 16
+ },
+ {
+  "qid": "q-en-049",
+  "bahasa": "en",
+  "topik": "tidur",
+  "teks": "my sleep is upside down, exhausted during the day and awake at night",
+  "token": 17,
+  "kata": 13
+ },
+ {
+  "qid": "q-en-050",
+  "bahasa": "en",
+  "topik": "tidur",
+  "teks": "I am tired but cannot sleep, closing my eyes just brings the task list back",
+  "token": 18,
+  "kata": 15
+ }
+]

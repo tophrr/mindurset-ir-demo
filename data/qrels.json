@@ -1,0 +1,459 @@
+{
+ "q-en-001": [
+  "dwm-en-005",
+  "dwm-en-015",
+  "dwm-en-022",
+  "dwm-en-026",
+  "dwm-en-029",
+  "pm-ch8-en-007"
+ ],
+ "q-en-002": [
+  "dwm-en-022",
+  "dwm-en-024",
+  "dwm-en-025",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-003": [
+  "dwm-en-013",
+  "dwm-en-022",
+  "dwm-en-026",
+  "pm-ch8-en-001",
+  "pm-ch8-en-005"
+ ],
+ "q-en-004": [
+  "dwm-en-022",
+  "dwm-en-024",
+  "kartu-en-all-or-nothing"
+ ],
+ "q-en-005": [
+  "dwm-en-014",
+  "dwm-en-022",
+  "dwm-en-026",
+  "dwm-en-032"
+ ],
+ "q-en-006": [
+  "dwm-en-014",
+  "dwm-en-015",
+  "dwm-en-026",
+  "dwm-en-028",
+  "dwm-en-029"
+ ],
+ "q-en-007": [
+  "dwm-en-022",
+  "dwm-en-026",
+  "pm-ch8-en-005",
+  "pm-ch8-en-007"
+ ],
+ "q-en-008": [
+  "pm-ch9-en-004",
+  "pm-ch9-en-005"
+ ],
+ "q-en-009": [
+  "dwm-en-022"
+ ],
+ "q-en-010": [
+  "dwm-en-024",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-011": [
+  "dwm-en-014",
+  "kartu-en-stress",
+  "tr-en-003"
+ ],
+ "q-en-012": [
+  "kartu-en-all-or-nothing",
+  "kartu-en-self-compassion",
+  "kartu-en-stress",
+  "tr-en-003"
+ ],
+ "q-en-013": [
+  "dwm-en-016",
+  "dwm-en-026",
+  "dwm-en-027",
+  "dwm-en-032",
+  "kartu-en-action",
+  "kartu-en-stress"
+ ],
+ "q-en-014": [
+  "dwm-en-028",
+  "kartu-en-stress",
+  "pm-ch6-en-001"
+ ],
+ "q-en-015": [
+  "kartu-en-stress"
+ ],
+ "q-en-016": [
+  "dwm-en-024",
+  "kartu-en-all-or-nothing",
+  "kartu-en-self-compassion",
+  "tr-en-002",
+  "tr-en-003"
+ ],
+ "q-en-017": [
+  "kartu-en-action"
+ ],
+ "q-en-019": [
+  "dwm-en-014",
+  "dwm-en-015",
+  "pm-ch6-en-002"
+ ],
+ "q-en-020": [
+  "kartu-en-self-compassion",
+  "kartu-en-stress",
+  "pm-ch9-en-005",
+  "tr-en-002",
+  "tr-en-003"
+ ],
+ "q-en-021": [
+  "dwm-en-022",
+  "kartu-en-action"
+ ],
+ "q-en-022": [
+  "dwm-en-007",
+  "dwm-en-030",
+  "kartu-en-rumination",
+  "kartu-en-stress"
+ ],
+ "q-en-023": [
+  "dwm-en-023",
+  "pm-ringkas-en-001"
+ ],
+ "q-en-024": [
+  "dwm-en-015",
+  "kartu-en-all-or-nothing"
+ ],
+ "q-en-025": [
+  "dwm-en-023",
+  "dwm-en-026"
+ ],
+ "q-en-026": [
+  "dwm-en-009",
+  "kartu-en-stress"
+ ],
+ "q-en-027": [
+  "dwm-en-024",
+  "dwm-en-027"
+ ],
+ "q-en-029": [
+  "dwm-en-015",
+  "dwm-en-016",
+  "dwm-en-026",
+  "pm-ch9-en-004"
+ ],
+ "q-en-031": [
+  "dwm-en-021",
+  "dwm-en-023"
+ ],
+ "q-en-032": [
+  "dwm-en-015"
+ ],
+ "q-en-033": [
+  "dwm-en-015",
+  "dwm-en-016"
+ ],
+ "q-en-034": [
+  "kartu-en-rumination",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-035": [
+  "dwm-en-026"
+ ],
+ "q-en-036": [
+  "dwm-en-021"
+ ],
+ "q-en-037": [
+  "pm-ch9-en-002",
+  "pm-ch9-en-005"
+ ],
+ "q-en-038": [
+  "dwm-en-021"
+ ],
+ "q-en-040": [
+  "dwm-en-024",
+  "kartu-en-all-or-nothing",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-041": [
+  "dwm-en-014",
+  "kartu-en-rumination",
+  "kartu-en-self-compassion",
+  "pm-ch9-en-005"
+ ],
+ "q-en-042": [
+  "dwm-en-006",
+  "dwm-en-015",
+  "dwm-en-026"
+ ],
+ "q-en-043": [
+  "dwm-en-024",
+  "kartu-en-all-or-nothing",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-044": [
+  "dwm-en-025"
+ ],
+ "q-en-045": [
+  "dwm-en-015",
+  "dwm-en-016",
+  "dwm-en-023",
+  "dwm-en-024",
+  "dwm-en-025",
+  "dwm-en-026",
+  "dwm-en-029",
+  "dwm-en-032",
+  "kartu-en-self-compassion"
+ ],
+ "q-en-046": [
+  "dwm-en-014",
+  "dwm-en-026",
+  "kartu-en-rumination",
+  "kartu-en-sleep",
+  "pm-ch6-en-002"
+ ],
+ "q-en-047": [
+  "dwm-en-017",
+  "dwm-en-029",
+  "kartu-en-rumination",
+  "kartu-en-sleep",
+  "kartu-en-stress",
+  "pm-ch6-en-002"
+ ],
+ "q-en-048": [
+  "kartu-en-sleep"
+ ],
+ "q-en-049": [
+  "dwm-en-017",
+  "kartu-en-sleep"
+ ],
+ "q-en-050": [
+  "dwm-en-017",
+  "dwm-en-027",
+  "dwm-en-029",
+  "kartu-en-rumination",
+  "kartu-en-sleep"
+ ],
+ "q-id-001": [
+  "dwm-id-014",
+  "dwm-id-016",
+  "dwm-id-022",
+  "dwm-id-026",
+  "dwm-id-032",
+  "pm-ch8-id-007"
+ ],
+ "q-id-002": [
+  "dwm-id-022",
+  "dwm-id-024",
+  "kartu-id-self-compassion",
+  "pm-ch8-id-007"
+ ],
+ "q-id-003": [
+  "dwm-id-026",
+  "pm-ch8-id-007"
+ ],
+ "q-id-004": [
+  "dwm-id-015",
+  "dwm-id-016",
+  "dwm-id-022",
+  "dwm-id-024",
+  "dwm-id-025",
+  "dwm-id-031",
+  "kartu-id-all-or-nothing",
+  "tr-id-002"
+ ],
+ "q-id-005": [
+  "dwm-id-014",
+  "dwm-id-015",
+  "dwm-id-022",
+  "dwm-id-026",
+  "pm-ch8-id-007"
+ ],
+ "q-id-006": [
+  "dwm-id-026"
+ ],
+ "q-id-007": [
+  "dwm-id-005",
+  "dwm-id-016",
+  "dwm-id-022",
+  "dwm-id-026",
+  "pm-ch8-id-007"
+ ],
+ "q-id-008": [
+  "dwm-id-020",
+  "kartu-id-self-compassion"
+ ],
+ "q-id-009": [
+  "kartu-id-action",
+  "pm-ch8-id-001",
+  "pm-ch8-id-002",
+  "pm-ch8-id-005",
+  "pm-ch8-id-007"
+ ],
+ "q-id-010": [
+  "dwm-id-022",
+  "dwm-id-025",
+  "dwm-id-031",
+  "kartu-id-all-or-nothing",
+  "kartu-id-safety-plan"
+ ],
+ "q-id-011": [
+  "kartu-id-all-or-nothing",
+  "tr-id-002",
+  "tr-id-003"
+ ],
+ "q-id-012": [
+  "kartu-id-all-or-nothing"
+ ],
+ "q-id-013": [
+  "dwm-id-010",
+  "dwm-id-016",
+  "dwm-id-027",
+  "kartu-id-action",
+  "kartu-id-stress"
+ ],
+ "q-id-014": [
+  "dwm-id-026",
+  "kartu-id-stress"
+ ],
+ "q-id-015": [
+  "kartu-id-stress"
+ ],
+ "q-id-016": [
+  "dwm-id-024",
+  "kartu-id-all-or-nothing",
+  "tr-id-002"
+ ],
+ "q-id-017": [
+  "kartu-id-stress"
+ ],
+ "q-id-019": [
+  "dwm-id-014",
+  "dwm-id-030",
+  "kartu-id-rumination",
+  "kartu-id-stress",
+  "tr-id-002"
+ ],
+ "q-id-020": [
+  "dwm-id-024",
+  "dwm-id-030",
+  "kartu-id-self-compassion",
+  "tr-id-002"
+ ],
+ "q-id-021": [
+  "dwm-id-022",
+  "kartu-id-all-or-nothing",
+  "tr-id-002"
+ ],
+ "q-id-022": [
+  "dwm-id-009",
+  "dwm-id-010",
+  "dwm-id-016",
+  "dwm-id-030",
+  "kartu-id-rumination",
+  "kartu-id-stress"
+ ],
+ "q-id-024": [
+  "dwm-id-014",
+  "kartu-id-all-or-nothing"
+ ],
+ "q-id-025": [
+  "kartu-id-self-compassion"
+ ],
+ "q-id-026": [
+  "kartu-id-stress",
+  "pm-ch8-id-005"
+ ],
+ "q-id-027": [
+  "dwm-id-014",
+  "dwm-id-024",
+  "kartu-id-all-or-nothing",
+  "kartu-id-rumination"
+ ],
+ "q-id-029": [
+  "dwm-id-027"
+ ],
+ "q-id-030": [
+  "dwm-id-014",
+  "dwm-id-030"
+ ],
+ "q-id-033": [
+  "dwm-id-010",
+  "dwm-id-011",
+  "dwm-id-014",
+  "dwm-id-016",
+  "dwm-id-027"
+ ],
+ "q-id-034": [
+  "dwm-id-014",
+  "dwm-id-024",
+  "dwm-id-026",
+  "dwm-id-031"
+ ],
+ "q-id-035": [
+  "dwm-id-014",
+  "dwm-id-016",
+  "dwm-id-030"
+ ],
+ "q-id-036": [
+  "pm-ch8-id-001"
+ ],
+ "q-id-040": [
+  "dwm-id-016",
+  "dwm-id-021",
+  "dwm-id-025",
+  "kartu-id-all-or-nothing"
+ ],
+ "q-id-041": [
+  "dwm-id-014",
+  "dwm-id-024",
+  "pm-ch9-id-005"
+ ],
+ "q-id-042": [
+  "dwm-id-010",
+  "dwm-id-030"
+ ],
+ "q-id-043": [
+  "dwm-id-024",
+  "kartu-id-all-or-nothing"
+ ],
+ "q-id-044": [
+  "dwm-id-025",
+  "pm-ringkas-id-001"
+ ],
+ "q-id-045": [
+  "dwm-id-015",
+  "dwm-id-024",
+  "dwm-id-026",
+  "dwm-id-031",
+  "dwm-id-032"
+ ],
+ "q-id-046": [
+  "dwm-id-010",
+  "dwm-id-015",
+  "dwm-id-016",
+  "dwm-id-017",
+  "dwm-id-026",
+  "dwm-id-027",
+  "kartu-id-sleep"
+ ],
+ "q-id-047": [
+  "dwm-id-028",
+  "kartu-id-rumination",
+  "kartu-id-sleep",
+  "kartu-id-stress"
+ ],
+ "q-id-048": [
+  "kartu-id-sleep"
+ ],
+ "q-id-049": [
+  "dwm-id-017",
+  "kartu-id-sleep",
+  "pm-ch8-id-007"
+ ],
+ "q-id-050": [
+  "dwm-id-017",
+  "dwm-id-027",
+  "dwm-id-028",
+  "kartu-id-rumination",
+  "kartu-id-sleep"
+ ]
+}

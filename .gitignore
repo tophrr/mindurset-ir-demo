@@ -1,0 +1,28 @@
+# lingkungan Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# model dan cache unduhan
+.cache/
+*.onnx
+*.pt
+*.bin
+
+# Streamlit
+.streamlit/secrets.toml
+
+# sistem operasi dan editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Catatan: data/emb_chunk.npy SENGAJA ikut di-commit (612 KB).
+# Dengan begitu demo bisa langsung dijalankan tanpa mengunduh model 2,2 GB.
+# Untuk membuatnya ulang: python siapkan_data.py --paksa
