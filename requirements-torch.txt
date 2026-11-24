@@ -1,0 +1,4 @@
+# Alternatif backend dense dengan sentence-transformers (butuh torch, ~2 GB).
+# Hanya untuk eksplorasi: angka M3/M4 akan bergeser dari naskah.
+-r requirements.txt
+sentence-transformers>=2.7,<7.0

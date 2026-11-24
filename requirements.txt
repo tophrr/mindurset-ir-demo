@@ -1,19 +1,8 @@
-# Demo IR Mind-Ur-Set — dependensi minimum
-#
-# Python 3.10 atau lebih baru. Diuji pada 3.11.
-#
-# Catatan pemasangan:
-#   - torch sudah menjadi dependensi sentence-transformers, tetapi memasangnya
-#     lebih dulu membuat resolusi versi lebih cepat dan tidak menarik build GPU.
-#   - Di Windows, torch CPU terpasang otomatis. Di Linux dengan GPU NVIDIA,
-#     pasang torch dari https://pytorch.org lebih dulu bila ingin dukungan CUDA.
-#   - Di macOS Apple Silicon, MPS dipakai otomatis tanpa konfigurasi tambahan.
-
-# antarmuka
+# Demo IR Mind-Ur-Set — dependensi inti (ringan, tanpa torch)
+# Python 3.10 atau lebih baru; diuji pada 3.14 (venv lokal) dan 3.12 (CI).
 streamlit>=1.30,<2.0
-
-# numerik
 numpy>=1.24,<3.0
 
-# M3: dense embedding
-sentence-transformers>=2.7,<7.0
+# M3/M4: pengodean kueri dengan BGE-M3 int8 lewat ONNX Runtime
+onnxruntime>=1.20
+tokenizers>=0.20

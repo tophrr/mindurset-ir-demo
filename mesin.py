@@ -140,6 +140,15 @@ def muat_model_dense(nama: str = "BAAI/bge-m3"):
     return SentenceTransformer(nama, device=pilih_device())
 
 
+def cari_dense_vektor(emb_korpus, ids: list[str], vektor_kueri, K: int = 10) -> list[str]:
+    """Peringkat dense dari vektor kueri yang sudah dihitung (ONNX atau torch)."""
+    import numpy as np
+
+    v = np.asarray(vektor_kueri, dtype=np.float32)
+    skor = emb_korpus @ (v / (np.linalg.norm(v) or 1.0))
+    return [ids[i] for i in np.argsort(-skor)[:K]]
+
+
 def cari_dense(model, emb_korpus, ids: list[str], kueri: str, K: int = 10,
                cache_kueri: dict | None = None) -> list[str]:
     """Peringkat dense dari embedding korpus yang sudah dihitung luring."""

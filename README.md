@@ -1,12 +1,11 @@
 # Demo Retrieval Mind-Ur-Set
 
-Demo **information retrieval murni** untuk korpus psikoedukasi Mind-Ur-Set.
-Tidak ada LLM, tidak ada model generatif. Sistem hanya mengembalikan peringkat
-*chunk* dari korpus tertutup beserta halaman sumbernya, sehingga keluaran tidak
-dapat berhalusinasi.
+Prototipe **information retrieval murni** untuk korpus psikoedukasi Mind-Ur-Set. Tidak ada LLM
+dan tidak ada model generatif: sistem hanya mengembalikan peringkat *chunk* dari korpus tertutup
+beserta halaman sumbernya, sehingga keluarannya tidak dapat berhalusinasi.
 
-Dibuat untuk melengkapi artikel **"Perbandingan Model Retrieval Leksikal, Dense,
-dan Hibrida pada Korpus Psikoedukasi Mikro Tertutup untuk Aplikasi Mind-Ur-Set"**.
+Melengkapi artikel **"Perbandingan Model Retrieval Leksikal, Dense, dan Hibrida pada Korpus
+Psikoedukasi Mikro Tertutup untuk Aplikasi Mind-Ur-Set"** (Kelompok 5, Kecerdasan Komputasional).
 
 ## Ringkas
 
@@ -14,47 +13,53 @@ dan Hibrida pada Korpus Psikoedukasi Mikro Tertutup untuk Aplikasi Mind-Ur-Set"*
 |---|---|
 | Korpus | 153 *chunk* psikoedukasi (77 Inggris, 76 Indonesia) |
 | Kueri uji | 100 (50 Indonesia, 50 Inggris) |
-| Kunci relevansi | 1.875 pasangan, 281 positif |
+| Kunci relevansi | 88 kueri, 281 pasangan positif |
 | Konfigurasi | M1 VSM TF-IDF · M2 Okapi BM25 · M3 BGE-M3 · M4 RRF |
 | Model generatif | tidak ada |
+| Backend dense | ONNX Runtime int8 (568 MB), cadangan torch |
 
 ## Menjalankan
 
-Butuh **Python 3.10+** (diuji pada 3.11). Perintah di bawah berlaku sama di
-macOS, Linux, dan Windows.
+Butuh Python 3.10+ (diuji pada 3.14 lokal dan 3.12 di CI).
 
 ```bash
 python -m venv .venv
-
-# macOS / Linux
-source .venv/bin/activate
-# Windows (PowerShell)
-.venv\Scripts\Activate.ps1
-# Windows (cmd)
-.venv\Scripts\activate.bat
-
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
 Buka <http://localhost:8501>.
 
-Saat pertama dibuka, aplikasi memuat `BAAI/bge-m3` (~2,2 GB) ke cache
-HuggingFace. Unduhan hanya sekali. Kalau ingin melewati tahap itu, M1 dan M2
-tetap dapat dipakai tanpa model dense — cukup hapus centang M3 dan M4 di bilah
-samping.
+M3 dan M4 memerlukan model BGE-M3 int8. Unduh lima berkas dari
+<https://huggingface.co/Xenova/bge-m3/tree/main/onnx> (`model_int8.onnx`, `tokenizer.json`,
+`tokenizer_config.json`, `special_tokens_map.json`, `config.json`) ke `models/bge-m3-onnx/`,
+atau set `BGE_MODEL_DIR`. Tanpa model, M1 dan M2 tetap berjalan dan aplikasi menandainya sendiri
+di bilah samping.
+
+Model torch (≈2 GB) hanya diperlukan bila ingin membandingkan backend:
+
+```bash
+pip install -r requirements-torch.txt
+```
 
 ## Isi antarmuka
 
 | Bagian | Keterangan |
 |---|---|
+| Peringatan keselamatan | Banner "bukan nasihat klinis" + rujukan 119 ext. 8 (SEJIWA) |
 | Mode kueri bebas | Tulis keluhan apa pun, lihat peringkat *chunk* |
 | Mode kueri uji | Pilih dari 88 kueri uji yang punya kunci relevansi |
 | Pemilih konfigurasi | Bandingkan M1–M4 berdampingan |
 | Saringan bahasa | Semua / Indonesia / Inggris |
-| Bukti relevansi | Tanda ✅ pada *chunk* yang ada di qrels |
-| Penjelasan | Istilah kueri yang bertumpang tindih dengan *chunk* |
-| Tabel perbandingan | Peringkat 1..K keempat metode berdampingan |
+| Bukti relevansi | Tanda ✅ pada *chunk* yang ada di qrels, P@K dan RR per metode |
+| Penjelasan | Istilah kueri yang bertumpang tindih dengan *chunk*, panjang token, lisensi |
+| Latensi | Waktu pencarian per permintaan (ms) |
+| Tab Evaluasi | Hitung ulang MRR 88 kueri dan bandingkan dengan Tabel III naskah |
+
+Kueri yang memuat frasa risiko (mis. *ingin mati*, *menyakiti diri*) memunculkan kartu bantuan
+**sebelum** hasil pencarian. Penyaring itu tidak memblokir pencarian; ia hanya mengubah urutan
+tampilan agar rujukan bantuan terbaca lebih dulu.
 
 ## Konfigurasi
 
@@ -65,73 +70,98 @@ samping.
 | M3 | BGE-M3 *dense* | 1024 dimensi · CLS pooling · vektor ternormalisasi |
 | M4 | RRF(M2, M3) | k = 60 |
 
-Tokenisasi menyamakan harness evaluasi paper: huruf kecil, pola `[^\W_]+`,
-stopword Inggris dan Indonesia dibuang, token satu huruf dibuang.
+Tokenisasi menyamakan harness evaluasi naskah: huruf kecil, pola `[^\W_]+`, stopword Inggris dan
+Indonesia dibuang, token satu huruf dibuang. Kesamaan itu dipatok oleh uji
+`tests/test_mesin.py::test_tokenisasi_sama_dengan_harness`.
 
-## Kesesuaian dengan paper
+## Kesesuaian dengan naskah
 
-MRR pada 88 kueri gabungan (`python uji_mesin.py`):
+```bash
+python uji_mesin.py              # memakai vektor acuan naskah
+python uji_mesin.py --backend onnx   # mengodekan ulang
+```
 
-| | Demo | Paper | Selisih |
+| | Demo | Naskah | Selisih |
 |---|---|---|---|
 | M1 | 0,3904 | 0,390 | +0,0004 |
 | M2 | 0,3966 | 0,397 | −0,0004 |
-| M3 | 0,3989 | 0,420 | −0,0211 |
-| M4 | 0,5005 | 0,500 | +0,0005 |
+| M3 | 0,4201 | 0,420 | +0,0001 |
+| M4 | 0,4997 | 0,500 | −0,0003 |
 
-M1, M2, dan M4 **cocok sampai empat angka desimal**. M3 berselisih 0,021 karena
-perbedaan *backend*: paper memakai ONNX Runtime int8, demo memakai PyTorch
-(fp16/fp32) di MPS/CUDA/CPU. *Pooling* keduanya sama, yaitu CLS.
+Angka itu hanya tercapai bila **vektor acuan** dipakai. Pengodean ulang dengan model yang sama
+tetap bergeser (kosinus ≈0,98 terhadap vektor naskah) karena int8 tidak deterministik antar konfigurasi
+*batch*; akibatnya MRR M3 bisa bergeser sampai ±0,02. Karena itu:
+
+- `data/embedding/emb_chunk_cls.npy` dan `emb_kueri_cls.npy` disertakan — vektor yang menghasilkan
+  angka naskah.
+- Tab **Evaluasi** memakai vektor kueri acuan tersebut, sehingga angkanya sama dengan Tabel III.
+- Pencarian bebas mengodekan kueri langsung dengan ONNX; hasilnya tunduk pada pergeseran di atas.
 
 ## Struktur berkas
 
 ```
-mindurset-demo/
-├── app.py              antarmuka Streamlit
-├── mesin.py            M1, M2, M3, M4 + metrik (tanpa Streamlit)
-├── siapkan_data.py     hitung ulang embedding korpus
-├── uji_mesin.py        hitung MRR, bandingkan dengan paper
-├── requirements.txt
+mindurset-ir-demo/
+├── app.py                 antarmuka Streamlit (tab Pencarian dan Evaluasi)
+├── mesin.py               M1, M2, M3, M4 + metrik (tanpa Streamlit)
+├── encoder.py             pengodean kueri ONNX int8, cadangan torch
+├── siapkan_data.py        sinkron data dari repo who-ir, periksa, bangun ulang vektor
+├── uji_mesin.py           hitung MRR, bandingkan dengan naskah
+├── tests/                 pytest: mesin, tokenisasi, AppTest
 ├── data/
-│   ├── korpus.json     153 chunk psikoedukasi
-│   ├── kueri.json      100 kueri uji
-│   ├── qrels.json      kunci relevansi (88 kueri)
-│   └── emb_chunk.npy   embedding BGE-M3 (153 × 1024, 612 KB)
-└── .venv/              lingkungan lokal, tidak di-commit
+│   ├── korpus.json        153 chunk psikoedukasi
+│   ├── kueri.json         100 kueri uji
+│   ├── qrels.json         kunci relevansi (88 kueri, 281 positif)
+│   └── embedding/         vektor acuan naskah (korpus + kueri)
+└── models/                model ONNX int8 (tidak di-commit)
 ```
 
-`mesin.py` sengaja tidak mengimpor Streamlit, sehingga dapat dipakai ulang di
-skrip, *notebook*, atau layanan lain.
+## Data
 
-## Membangun ulang embedding
-
-Berkas `data/emb_chunk.npy` sudah disertakan agar demo langsung jalan. Untuk
-membuatnya ulang (misalnya ganti model atau presisi):
+Sumber kebenaran ada di repo artefak `who-ir`. Jangan menyunting `data/*.json` langsung.
 
 ```bash
-python siapkan_data.py --paksa
+python siapkan_data.py sinkron --dari ~/dev/who-ir   # salin korpus, kueri, qrels, vektor acuan
+python siapkan_data.py periksa                      # cetak jumlah + checksum, gagal bila tidak cocok
+python siapkan_data.py embedding --paksa            # bangun ulang vektor dengan torch (opsional)
 ```
 
-Encoding 153 *chunk* memakan 15 detik di GPU Apple M1 Pro, sekitar 1 menit di
-CPU. Perangkat dipilih otomatis: CUDA → MPS → CPU.
+`periksa` dijalankan juga di CI, sehingga data yang menyimpang dari naskah menggagalkan build.
 
-## Catatan kompatibilitas
+## Uji
 
-| Sistem | Status | Catatan |
-|---|---|---|
-| macOS Apple Silicon | diuji | MPS aktif otomatis |
-| macOS Intel | seharusnya jalan | CPU, encoding lebih lambat |
-| Linux + NVIDIA | seharusnya jalan | CUDA aktif otomatis |
-| Windows 10/11 | seharusnya jalan | CPU; `torch` versi CPU terpasang otomatis |
+```bash
+pip install -r requirements-dev.txt
+pytest -q
+```
 
-Tidak ada *path* absolut, tidak ada *shell script*, dan tidak ada dependensi
-khusus sistem operasi. Yang perlu diperhatikan hanya `torch`: di Windows,
-`pip install -r requirements.txt` akan mengambil *wheel* CPU. Untuk dukungan
-CUDA di Linux/Windows, pasang `torch` dari <https://pytorch.org> lebih dulu.
+Delapan uji: kesesuaian jumlah data, tokenisasi vs harness, MRR M1/M2, determinisme RRF, metrik
+pada contoh kecil, aplikasi memuat, pencarian menampilkan hasil, dan kartu risiko muncul.
+
+## Deploy
+
+Target: **Hugging Face Spaces** dengan SDK Streamlit. Model ONNX int8 (568 MB) diletakkan di
+*local* Space dan diunduh saat *build*, bukan saat permintaan pertama.
+
+1. Buat Space (SDK Streamlit, publik) lalu salin isi repo ini.
+2. Di `README.md` Space (bukan berkas ini) tambahkan front-matter:
+
+   ```yaml
+   ---
+   title: Mind-Ur-Set IR Demo
+   sdk: streamlit
+   app_file: app.py
+   pinned: false
+   ---
+   ```
+
+3. Unduh model saat build melalui `Dockerfile` atau `packages.txt` + skrip `unduh_model.py`
+   (lihat `unduh_model.py` di repo ini). Alternatif: unggah folder model ke
+   *Hugging Face dataset* lalu salin pada build agar tidak menembus batas ukuran repo Space.
+4. Set `BGE_MODEL_DIR` bila model diletakkan di luar `models/bge-m3-onnx/`.
+
+Tanpa model, Space tetap hidup dengan M1/M2; tab Evaluasi hanya menghitung dua konfigurasi itu.
 
 ## Lisensi dan atribusi
-
-Korpus disusun dari empat sumber:
 
 | Sumber | Lisensi |
 |---|---|
@@ -140,16 +170,15 @@ Korpus disusun dari empat sumber:
 | Kerangka *thought record* tujuh kolom (Beck dkk. 1979) | ditulis ulang, karya sendiri |
 | Pustaka kartu *coping skills* Mind-Ur-Set | karya sendiri (MIT) |
 
-Setiap *chunk* menyimpan medan `sumber`, `halaman`, dan `lisensi` agar atribusi
-dapat ditelusuri sampai halaman asalnya. Lisensi CC BY-NC-SA 3.0 IGO bersifat
-**non-komersial** dan **berbagi serupa**; distribusi di luar konteks akademik
-perlu memperhatikan kedua syarat itu. Rincian lengkap ada di [`NOTICE.md`](NOTICE.md).
+Setiap *chunk* menyimpan `sumber`, `halaman`, dan `lisensi` agar atribusi dapat ditelusuri sampai
+halaman asalnya. Lisensi CC BY-NC-SA 3.0 IGO bersifat non-komersial dan berbagi serupa; distribusi
+di luar konteks akademik perlu memperhatikan kedua syarat itu. Rincian ada di [`NOTICE.md`](NOTICE.md).
 
-Kode dan data karya sendiri dilisensikan MIT (lihat [`LICENSE`](LICENSE)).
-Lisensi MIT **tidak** mencakup teks WHO di dalam `data/korpus.json`.
+Kode dan data karya sendiri dilisensikan MIT (lihat [`LICENSE`](LICENSE)). Lisensi MIT **tidak**
+mencakup teks WHO di dalam `data/korpus.json`.
 
-Repositori ini tidak memuat kredensial, kunci API, maupun data pribadi. Semua
-kueri uji adalah adaptasi dari ESConv, bukan tulisan pengguna sungguhan.
+Repositori tidak memuat kredensial, kunci API, maupun data pribadi. Semua kueri uji adalah adaptasi
+dari ESConv, bukan tulisan pengguna sungguhan.
 
 ## Sitasi
 
