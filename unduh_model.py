@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import pathlib
 import sys
+import time
 import urllib.request
 
 BASE = "https://huggingface.co/Xenova/bge-m3/resolve/main"
@@ -24,11 +25,21 @@ BERKAS = {
 TUJUAN = pathlib.Path(__file__).resolve().parent / "models" / "bge-m3-onnx"
 
 
-def unduh(url: str, jalur: pathlib.Path) -> None:
+def unduh(url: str, jalur: pathlib.Path, percobaan: int = 3, timeout: int = 120) -> None:
+    """Unduh dengan timeout dan percobaan ulang; berkas sementara diberi akhiran .part."""
     print(f"→ {jalur.name}", flush=True)
-    dengan_tmp = jalur.with_suffix(jalur.suffix + ".part")
-    urllib.request.urlretrieve(url, dengan_tmp)
-    dengan_tmp.replace(jalur)
+    sementara = jalur.with_suffix(jalur.suffix + ".part")
+    for i in range(1, percobaan + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as r, sementara.open("wb") as f:
+                while potong := r.read(1 << 20):
+                    f.write(potong)
+            sementara.replace(jalur)
+            return
+        except Exception as e:  # noqa: BLE001
+            print(f"  percobaan {i}/{percobaan} gagal: {e}", file=sys.stderr)
+            time.sleep(2 * i)
+    raise RuntimeError(f"gagal mengunduh {jalur.name} setelah {percobaan} percobaan")
 
 
 def main() -> int:

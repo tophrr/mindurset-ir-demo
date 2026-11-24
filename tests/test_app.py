@@ -35,3 +35,31 @@ def test_kueri_berisiko_memunculkan_peringatan():
     assert not at.exception
     pesan = " ".join(e.value for e in at.error)
     assert "119" in pesan and "SEJIWA" in pesan
+
+def test_kueri_tanpa_kata_ditolak():
+    at = AppTest.from_file(APP, default_timeout=120).run()
+    at.multiselect[0].set_value(["M1 · VSM TF-IDF"]).run()
+    at.text_area[0].set_value("???").run()
+    at.button[0].click().run()
+    assert not at.exception
+    pesan = " ".join(w.value for w in at.warning)
+    assert "tidak memuat kata" in pesan
+
+
+def test_hasil_bertahan_saat_slider_diubah():
+    at = AppTest.from_file(APP, default_timeout=120).run()
+    at.multiselect[0].set_value(["M1 · VSM TF-IDF"]).run()
+    at.button[0].click().run()
+    jumlah_awal = len(at.subheader)
+    at.slider[-1].set_value(700).run()
+    assert len(at.subheader) == jumlah_awal
+
+
+def test_frasa_risiko_varian_terdeteksi():
+    for frasa in ("mau mati aja", "bundir", "suicidal", "gak kuat hidup", "capek hidup"):
+        at = AppTest.from_file(APP, default_timeout=120).run()
+        at.multiselect[0].set_value(["M1 · VSM TF-IDF"]).run()
+        at.text_area[0].set_value(frasa).run()
+        at.button[0].click().run()
+        pesan = " ".join(e.value for e in at.error)
+        assert "119" in pesan, frasa

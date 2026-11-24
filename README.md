@@ -134,30 +134,23 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
-Delapan uji: kesesuaian jumlah data, tokenisasi vs harness, MRR M1/M2, determinisme RRF, metrik
-pada contoh kecil, aplikasi memuat, pencarian menampilkan hasil, dan kartu risiko muncul.
+Sebelas uji: kesesuaian jumlah data, tokenisasi vs harness, MRR M1/M2, determinisme RRF, metrik
+pada contoh kecil, aplikasi memuat, pencarian menampilkan hasil, kartu risiko, kueri tanpa kata
+ditolak, hasil bertahan saat slider diubah, dan lima varian frasa risiko terdeteksi.
 
 ## Deploy
 
-Target: **Hugging Face Spaces** dengan SDK Streamlit. Model ONNX int8 (568 MB) diletakkan di
-*local* Space dan diunduh saat *build*, bukan saat permintaan pertama.
+Target: **Hugging Face Spaces** dengan **SDK Docker** (berkas `Dockerfile` sudah disertakan).
+Model ONNX int8 (568 MB) diunduh saat *build* lewat `python unduh_model.py`, bukan saat permintaan
+pertama, sehingga M3/M4 langsung aktif setelah Space selesai dibangun.
 
-1. Buat Space (SDK Streamlit, publik) lalu salin isi repo ini.
-2. Di `README.md` Space (bukan berkas ini) tambahkan front-matter:
-
-   ```yaml
-   ---
-   title: Mind-Ur-Set IR Demo
-   sdk: streamlit
-   app_file: app.py
-   pinned: false
-   ---
-   ```
-
-3. Unduh model saat build melalui `Dockerfile` atau `packages.txt` + skrip `unduh_model.py`
-   (lihat `unduh_model.py` di repo ini). Alternatif: unggah folder model ke
-   *Hugging Face dataset* lalu salin pada build agar tidak menembus batas ukuran repo Space.
-4. Set `BGE_MODEL_DIR` bila model diletakkan di luar `models/bge-m3-onnx/`.
+1. Buat Space dengan SDK **Docker**, publik.
+2. Salin isi repo ini; front-matter Space sudah ada di `space/README.md` (gunakan berkas itu
+   sebagai `README.md` Space).
+3. `Dockerfile` menjalankan `python unduh_model.py` pada tahap build; `BGE_MODEL_DIR` sudah di-set
+   ke `/app/models/bge-m3-onnx` di dalam image.
+4. Bila ingin menghindari model di dalam image, unduh dari *dataset* Hugging Face pada startup dan
+   set `BGE_MODEL_DIR` sesuai lokasinya.
 
 Tanpa model, Space tetap hidup dengan M1/M2; tab Evaluasi hanya menghitung dua konfigurasi itu.
 

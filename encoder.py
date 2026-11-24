@@ -20,6 +20,7 @@ import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parent
 BERKAS_MODEL = "model_int8.onnx"
+MAKS_CACHE = 256      # jumlah vektor kueri yang disimpan; menjaga memori tetap datar
 
 
 def letak_model(nilai: str | pathlib.Path | None = None) -> pathlib.Path:
@@ -41,8 +42,8 @@ class EncoderOnnx:
 
     backend = "onnx"
 
-    def __init__(self, model_dir: str | pathlib.Path | None = None, threads: int = 4,
-                 maks_panjang: int = 512):
+    def __init__(self, model_dir: str | pathlib.Path | None = None,
+                 threads: int = min(4, os.cpu_count() or 2), maks_panjang: int = 512):
         import onnxruntime as ort
         from tokenizers import Tokenizer
 
@@ -55,7 +56,7 @@ class EncoderOnnx:
         self.sesi = ort.InferenceSession(str(self.dir / BERKAS_MODEL), sess_options=so,
                                          providers=["CPUExecutionProvider"])
         self.masuk = [i.name for i in self.sesi.get_inputs()]
-        self._cache: dict[str, np.ndarray] = {}
+        self._cache: dict[str, np.ndarray] = {}   # dibatasi MAKS_CACHE agar memori stabil
 
     def kodekan(self, teks: str) -> np.ndarray:
         if teks in self._cache:
@@ -70,6 +71,8 @@ class EncoderOnnx:
         v = h[:, 0, :][0]
         v = v / (np.linalg.norm(v) or 1.0)
         v = v.astype(np.float32)
+        if len(self._cache) >= MAKS_CACHE:
+            self._cache.pop(next(iter(self._cache)))
         self._cache[teks] = v
         return v
 
@@ -92,6 +95,8 @@ class EncoderTorch:
             return self._cache[teks]
         v = self.model.encode([teks], normalize_embeddings=True, convert_to_numpy=True)[0]
         v = v.astype(np.float32)
+        if len(self._cache) >= MAKS_CACHE:
+            self._cache.pop(next(iter(self._cache)))
         self._cache[teks] = v
         return v
 

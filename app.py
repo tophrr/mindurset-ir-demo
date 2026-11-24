@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 import time
 
 import numpy as np
@@ -29,12 +30,28 @@ EMB = DATA / "embedding" / "emb_chunk_cls.npy"
 PAPER = {"M1": 0.390, "M2": 0.397, "M3": 0.420, "M4": 0.500}
 MAKS_KARAKTER = 500
 
-FRASA_RISIKO = (
-    "bunuh diri", "mengakhiri hidup", "mengakhiri semuanya", "menyakiti diri",
-    "tidak ingin hidup", "pengen mati", "ingin mati", "mati saja",
-    "suicide", "kill myself", "end my life", "self-harm", "self harm", "hurt myself",
-    "better off dead", "want to die",
+NAMA_SUMBER = {
+    "who-dwm-2020-eng": "WHO DWM (EN)",
+    "who-dwm-2020-ind": "WHO DWM (ID)",
+    "who-pm-18-5-eng": "WHO PM+ (EN)",
+    "who-pm-18-5-id": "WHO PM+ (ID)",
+    "mindurset-cards-v1": "Kartu koping",
+    "modul-thought-record": "Thought record",
+}
+
+# Pola risiko: teks dinormalisasi dulu (huruf kecil, tanda baca jadi spasi) lalu dicocokkan
+# sebagai kata, supaya variasi seperti "bundir", "mau mati", "gak kuat hidup" ikut tertangkap.
+POLA_RISIKO = (
+    r"\bbunuh\s*diri\b", r"\bbundir\b", r"\bsuicid\w*\b", r"\bkill\s+my\s?self\b",
+    r"\bend\s+my\s+life\b", r"\bwant\s+to\s+die\b", r"\bbetter\s+off\s+dead\b",
+    r"\b(mau|pengen|ingin|pingin)\s+mati\b", r"\bmati\s+aja\b",
+    r"\b(tidak|gak|nggak|enggak)\s+(ingin|mau)\s+hidup\b", r"\bcapek\s+hidup\b",
+    r"\bgak\s+kuat\s+hidup\b", r"\blebih\s+baik\s+mati\b", r"\bakhiri\s+hidup\w*\b",
+    r"\bmengakhiri\s+semuanya\b", r"\bmenyakiti\s+diri\b", r"\bnyakitin\s+diri\b",
+    r"\bmelukai\s+diri\b", r"\bsayat\b", r"\bself[\s-]?harm\b", r"\bself[\s-]?injur\w*\b",
+    r"\bhurt\s+my\s?self\b", r"\boverdos\w*\b", r"\bgantung\s+diri\b",
 )
+_RE_RISIKO = re.compile("|".join(POLA_RISIKO), re.IGNORECASE)
 
 st.set_page_config(page_title="Mind-Ur-Set · IR Demo", page_icon="🔎", layout="wide")
 
@@ -72,8 +89,25 @@ NAMA_BACKEND = {"onnx": "ONNX int8 (angka naskah)", "torch": "torch fp32 (pemban
 
 
 def deteksi_risiko(teks: str) -> list[str]:
-    kecil = teks.lower()
-    return [f for f in FRASA_RISIKO if f in kecil]
+    rapih = " ".join(re.sub(r"[^\w\s]", " ", teks.lower()).replace("_", " ").split())
+    return sorted({m.group(0) for m in _RE_RISIKO.finditer(rapih)})
+
+
+def rentang_halaman(halaman) -> str:
+    """[77, 78, 79, 82] -> '77–79, 82'."""
+    if not halaman:
+        return "—"
+    if isinstance(halaman, int):
+        return str(halaman)
+    angka = sorted({int(h) for h in halaman})
+    hasil, awal = [], angka[0]
+    for i, a in enumerate(angka):
+        b = angka[i + 1] if i + 1 < len(angka) else None
+        if b is None or b != a + 1:
+            hasil.append(f"{awal}" if awal == a else f"{awal}–{a}")
+            if b is not None:
+                awal = b
+    return ", ".join(hasil)
 
 
 def tumpang_tindih(kueri: str, doc_id: str) -> tuple[list[str], float]:
@@ -84,12 +118,12 @@ def tumpang_tindih(kueri: str, doc_id: str) -> tuple[list[str], float]:
 
 
 def pencari(backend: str | None):
-    """Kembalikan kamus fungsi pencarian; M3/M4 hanya bila encoder tersedia."""
+    """Kamus fungsi pencarian; M3/M4 hanya bila encoder tersedia."""
     def m1(teks: str, k: int = 10) -> list[str]:
-        return [d for d, _ in M1.cari(teks, k)]
+        return [d for d, s in M1.cari(teks, k) if s > 0]
 
     def m2(teks: str, k: int = 10) -> list[str]:
-        return [d for d, _ in M2.cari(teks, k)]
+        return [d for d, s in M2.cari(teks, k) if s > 0]
 
     fungsi = {"M1 · VSM TF-IDF": m1, "M2 · Okapi BM25": m2}
     if backend and EMBED is not None:
@@ -104,6 +138,19 @@ def pencari(backend: str | None):
     return fungsi
 
 
+def kartu_bantuan() -> None:
+    st.error(
+        "**Kueri ini menyentuh tema risiko tinggi.** Demo ini tidak dapat menilai risiko dan tidak "
+        "memberikan pertolongan. Hubungi **119 ext. 8 (SEJIWA)**, **112**, atau IGD terdekat "
+        "sekarang. Di luar Indonesia: [findahelpline.com](https://findahelpline.com).",
+        icon="🚨",
+    )
+    st.caption(
+        "Kutipan di bawah hanya bahan bacaan psikoedukasi, bukan penanganan krisis, dan sengaja "
+        "tidak dibuka otomatis."
+    )
+
+
 # --------------------------------------------------------------------------
 # kepala halaman
 # --------------------------------------------------------------------------
@@ -111,7 +158,7 @@ st.title("🔎 Mind-Ur-Set · Demo Retrieval")
 st.warning(
     "**Demo penelitian, bukan nasihat klinis.** Sistem hanya menampilkan kutipan dari korpus "
     "psikoedukasi tertutup dan tidak menegakkan diagnosis. Bila Anda atau orang di sekitar Anda "
-    "dalam bahaya, hubungi layanan darurat atau **119 ext. 8 (SEJIWA)**.",
+    "dalam bahaya, hubungi **119 ext. 8 (SEJIWA)** atau layanan darurat setempat.",
     icon="⚠️",
 )
 
@@ -122,6 +169,7 @@ with st.sidebar:
             "Backend dense",
             BACKEND_TERSEDIA,
             index=0,
+            format_func=lambda b: NAMA_BACKEND.get(b, b),
             help="ONNX int8 memakai vektor yang sama dengan naskah, sehingga M3/M4 cocok "
                  "dengan angka paper. torch hanya pembanding.",
         )
@@ -131,7 +179,7 @@ with st.sidebar:
         st.caption("Encoder dense tidak tersedia — hanya M1 dan M2 yang bisa dipakai.")
     st.divider()
     st.caption("M1 VSM TF-IDF · M2 Okapi BM25 (k1=1,2 b=0,75) · M3 BGE-M3 1024-d · M4 RRF k=60")
-    st.caption(f"Korpus: {len(KORPUS)} chunk · kueri: {len(KUERI)} · ber-qrels: {len(QRELS)}")
+    st.caption(f"Korpus {len(KORPUS)} chunk · kueri {len(KUERI)} · ber-qrels {len(QRELS)}")
 
 tab_cari, tab_eval = st.tabs(["Pencarian", "Evaluasi"])
 
@@ -159,98 +207,118 @@ with tab_cari:
             )
             qid = None
         else:
-            opsi = {f"{q['qid']} · {q['teks'][:70]}": q for q in KUERI if q["qid"] in QRELS}
+            opsi = {f"{q['qid']} · {q['teks'][:60]}…": q for q in KUERI if q["qid"] in QRELS}
             pilih = st.selectbox("Pilih kueri uji", list(opsi))
             q = opsi[pilih]
             teks_kueri, qid = q["teks"], q["qid"]
-            st.info(f"**{qid}** ({q['bahasa']}) — {len(QRELS[qid])} chunk relevan menurut qrels final")
+            st.info(f"**{qid}** ({q['bahasa']}) — {len(QRELS[qid])} chunk relevan · “{teks_kueri}”")
     with kol_kanan:
         bawaan = [n for n in tersedia_nama if n.startswith(("M2", "M3", "M4"))] or tersedia_nama[:2]
-        metode_pilih = st.multiselect("Konfigurasi", tersedia_nama, default=bawaan)
+        metode_pilih = st.multiselect(
+            "Konfigurasi",
+            tersedia_nama,
+            default=bawaan,
+            format_func=lambda n: n.split(" · ")[0],
+            help="M1 VSM TF-IDF · M2 BM25 · M3 BGE-M3 · M4 RRF",
+        )
         topk = st.slider("Kedalaman peringkat", 3, 20, 10)
         bahasa = st.radio("Saringan bahasa dokumen", ["Semua", "Indonesia", "Inggris"])
         tampil_teks = st.slider("Panjang teks ditampilkan (karakter)", 200, 1200, 400, step=100)
 
     jalan = st.button("Cari", type="primary", width="stretch")
 
-    if jalan and not teks_kueri.strip():
-        st.warning("Kueri kosong.")
-
-    if jalan and teks_kueri.strip():
-        frasa = deteksi_risiko(teks_kueri)
-        if frasa:
-            st.error(
-                "**Kueri ini menyentuh tema risiko tinggi.** Demo ini tidak dapat menilai risiko "
-                "dan tidak memberikan pertolongan. Hubungi **119 ext. 8 (SEJIWA)**, layanan darurat "
-                "setempat, atau orang terdekat sekarang. Hasil di bawah hanya bahan bacaan.",
-                icon="🚨",
+    if jalan:
+        if not teks_kueri.strip():
+            st.warning("Kueri kosong.")
+        elif not tokenize(teks_kueri):
+            st.warning(
+                "Kueri tidak memuat kata yang bisa dicari (hanya tanda baca atau kata umum). "
+                "Tulis keluhan dengan kata benda atau kata kerja, misalnya “sulit tidur”."
             )
-
-        def lolos(doc_id: str) -> bool:
-            b = KOR[doc_id].get("bahasa")
-            if bahasa == "Indonesia":
-                return b == "id"
-            if bahasa == "Inggris":
-                return b == "en"
-            return True
-
-        if not metode_pilih:
-            st.info("Pilih sekurangnya satu konfigurasi.")
+        elif not metode_pilih:
+            st.warning("Pilih sekurangnya satu konfigurasi.")
         else:
+            frasa = deteksi_risiko(teks_kueri)
+
+            def lolos(doc_id: str) -> bool:
+                b = KOR[doc_id].get("bahasa")
+                if bahasa == "Indonesia":
+                    return b == "id"
+                if bahasa == "Inggris":
+                    return b == "en"
+                return True
+
             with st.spinner("Menghitung peringkat…"):
-                if backend:
+                if backend and any(n.startswith(("M3", "M4")) for n in metode_pilih):
                     muat_encoder(backend)   # pemanasan; biaya muat model tidak dihitung
                 awal = time.perf_counter()
                 hasil = {nama: [d for d in fungsi[nama](teks_kueri, len(IDS)) if lolos(d)][:topk]
                          for nama in metode_pilih}
                 lama = (time.perf_counter() - awal) * 1000
+            st.session_state["hasil_cari"] = {
+                "teks": teks_kueri, "qid": qid, "hasil": hasil, "lama": lama,
+                "risiko": frasa, "topk": topk,
+            }
 
-            relevan = set(QRELS.get(qid, [])) if qid else set()
+    simpan = st.session_state.get("hasil_cari")
+    if simpan:
+        hasil = simpan["hasil"]
+        relevan = set(QRELS.get(simpan["qid"], [])) if simpan["qid"] else set()
+        if simpan["risiko"]:
+            kartu_bantuan()
 
-            if qid:
-                st.subheader("Ringkasan ketepatan")
-                kol = st.columns(len(hasil))
-                for c, (nama, urut) in zip(kol, hasil.items()):
-                    hit = len([d for d in urut if d in relevan])
-                    p_at = hit / max(len(urut), 1)
-                    rr = next((1.0 / i for i, d in enumerate(urut, 1) if d in relevan), 0.0)
-                    c.metric(nama.split(" · ")[0], f"P@K {p_at:.2f}", f"RR {rr:.3f}",
-                             delta_color="off")
-                st.caption("P@K = proporsi chunk relevan pada K teratas. RR = 1/peringkat relevan pertama.")
-
+        if simpan["qid"]:
+            st.subheader("Ringkasan ketepatan")
+            kol = st.columns(len(hasil))
+            for c, (nama, urut) in zip(kol, hasil.items()):
+                hit = len([d for d in urut if d in relevan])
+                k = len(urut) or 1
+                rr = next((1.0 / i for i, d in enumerate(urut, 1) if d in relevan), 0.0)
+                c.metric(nama.split(" · ")[0], f"P@{k} {hit / k:.2f}", f"RR {rr:.3f}")
             st.caption(
-                f"Latensi pencarian: **{lama:.0f} ms** untuk {len(hasil)} konfigurasi "
-                f"(kedalaman {topk}, backend {backend or 'leksikal saja'})."
+                "P@K = proporsi chunk relevan pada hasil teratas; RR = 1/peringkat relevan pertama. "
+                "K mengikuti jumlah hasil setelah saringan bahasa, bukan kedalaman yang diminta."
             )
 
-            for nama, urut in hasil.items():
-                st.subheader(nama)
-                if not urut:
-                    st.write("_tidak ada hasil_")
-                    continue
-                for pos, doc_id in enumerate(urut, start=1):
-                    d = KOR[doc_id]
-                    benar = doc_id in relevan
-                    tanda = "✅" if benar else ("·" if qid else "")
-                    hal = d.get("halaman") or "—"
-                    judul = f"{tanda} **{pos}.** `{doc_id}` · {d.get('sumber', '?')} · hal. {hal}"
-                    with st.expander(judul, expanded=(pos <= 2)):
-                        teks = d["teks"]
-                        st.write(teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""))
-                        sama, cakupan = tumpang_tindih(teks_kueri, doc_id)
-                        st.caption(
-                            f"{d.get('token', '?')} token · kemiripan istilah {cakupan:.0%} · "
-                            f"istilah sama: {', '.join(sama[:12]) if sama else '—'}"
-                        )
-                        st.caption(f"Lisensi: {d.get('lisensi', '?')}")
+        st.caption(
+            f"Latensi pencarian: **{simpan['lama']:.0f} ms** untuk {len(hasil)} konfigurasi "
+            f"(kedalaman {simpan['topk']}, backend {backend or 'leksikal saja'})."
+        )
 
-            if len(hasil) > 1:
-                st.subheader("Perbandingan peringkat")
-                baris = [{"#": pos + 1,
-                          **{nama.split(" · ")[0]: (urut[pos] if pos < len(urut) else "—")
-                             for nama, urut in hasil.items()}}
-                         for pos in range(topk)]
-                st.dataframe(baris, width="stretch", hide_index=True)
+        if len(hasil) > 1:
+            st.subheader("Perbandingan peringkat")
+            baris = []
+            for pos in range(simpan["topk"]):
+                isi = {"#": pos + 1}
+                for nama, urut in hasil.items():
+                    d = urut[pos] if pos < len(urut) else "—"
+                    if d != "—" and simpan["qid"] and d in relevan:
+                        d = f"{d} ✅"
+                    isi[nama.split(" · ")[0]] = d
+                baris.append(isi)
+            st.dataframe(baris, width="stretch", hide_index=True)
+
+        for nama, urut in hasil.items():
+            st.subheader(nama)
+            if not urut:
+                st.write("_tidak ada hasil; tidak ada kata kueri yang cocok pada konfigurasi ini._")
+                continue
+            for pos, doc_id in enumerate(urut, start=1):
+                d = KOR[doc_id]
+                benar = doc_id in relevan
+                tanda = "✅ " if benar else ("· " if simpan["qid"] else "")
+                sumber = NAMA_SUMBER.get(d.get("sumber", ""), d.get("sumber", "?"))
+                judul = (f"{tanda}**{pos}.** `{doc_id}` · {sumber} · "
+                         f"hal. {rentang_halaman(d.get('halaman'))}")
+                with st.expander(judul, expanded=(pos <= 2 and not simpan["risiko"])):
+                    teks = d["teks"]
+                    st.write(teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""))
+                    sama, cakupan = tumpang_tindih(simpan["teks"], doc_id)
+                    st.caption(
+                        f"{d.get('token', '?')} token · kemiripan istilah {cakupan:.0%} · "
+                        f"istilah sama: {', '.join(sama[:12]) if sama else '—'}"
+                    )
+                    st.caption(f"Lisensi: {d.get('lisensi', '?')}")
 
 # ==========================================================================
 # TAB 2 — evaluasi
@@ -258,28 +326,30 @@ with tab_cari:
 with tab_eval:
     st.subheader("Hitung ulang MRR pada 88 kueri uji")
     st.caption(
-        "Menjalankan konfigurasi yang sama dengan tab Pencarian pada seluruh kueri yang punya "
-        "qrels, lalu membandingkan hasilnya dengan Tabel III naskah."
+        "Memakai konfigurasi yang tersedia dan seluruh kueri yang punya qrels, lalu "
+        "membandingkan hasilnya dengan Tabel III naskah. Bila vektor acuan tersedia, M3/M4 "
+        "memakainya sehingga angkanya sama dengan naskah."
     )
     if not BACKEND_TERSEDIA:
-        st.info("Encoder dense tidak tersedia; evaluasi M3/M4 dilewati.")
+        st.info("Encoder dense tidak terpasang; M3/M4 tetap dihitung dari vektor acuan bila ada.")
     jalan_eval = st.button("Hitung MRR", type="primary")
 
     if jalan_eval:
         acuan = encoder.vektor_kueri_acuan()
-        enc = muat_encoder(backend) if (backend and EMBED is not None) else None
+        kand = [q for q in KUERI if q["qid"] in QRELS]
+        perlu_encoder = EMBED is not None and any(q["qid"] not in acuan for q in kand)
+        enc = muat_encoder(backend) if (perlu_encoder and backend) else None
         fungsi = pencari(backend)
+        progress = st.progress(0.0, text="menghitung…")
+        hasil, lama = {}, {}
 
         def vektor_uji(q: dict):
-            """Vektor acuan naskah bila ada; kalau tidak, kodekan dengan encoder aktif."""
             if q["qid"] in acuan:
                 return acuan[q["qid"]]
             if enc is None:
-                raise RuntimeError("encoder dense tidak tersedia untuk kueri ini")
+                raise RuntimeError("vektor acuan tidak lengkap dan encoder tidak tersedia")
             return enc.kodekan(q["teks"])
-        kand = [q for q in KUERI if q["qid"] in QRELS]
-        progress = st.progress(0.0, text="menghitung…")
-        hasil, lama = {}, {}
+
         for i, nama in enumerate(fungsi):
             awal = time.perf_counter()
             nilai = []
@@ -299,26 +369,32 @@ with tab_eval:
             lama[nama] = time.perf_counter() - awal
             progress.progress((i + 1) / len(fungsi), text=f"{nama} selesai")
         progress.empty()
-        st.caption(
-            "M3/M4 memakai vektor kueri acuan naskah (data/embedding/emb_kueri_cls.npy) bila "
-            "tersedia, sehingga angkanya sama dengan Tabel III."
-        )
+        st.session_state["hasil_eval"] = {"hasil": hasil, "lama": lama, "n": len(kand)}
 
+    simpan_eval = st.session_state.get("hasil_eval")
+    if simpan_eval:
         baris = []
-        for nama, nilai in hasil.items():
-            kode = nama.split(" · ")[0]
-            acuan = PAPER.get(kode)
+        for nama, nilai in simpan_eval["hasil"].items():
+            acuan_mrr = PAPER.get(nama.split(" · ")[0])
             baris.append({
                 "Konfigurasi": nama,
-                "MRR": round(nilai, 3),
-                "Naskah": acuan,
-                "Selisih": None if acuan is None else round(nilai - acuan, 3),
-                "Waktu (s)": round(lama[nama], 1),
+                "MRR": nilai,
+                "Naskah": acuan_mrr,
+                "Selisih": None if acuan_mrr is None else nilai - acuan_mrr,
+                "Waktu (s)": simpan_eval["lama"][nama],
             })
-        st.dataframe(baris, width="stretch", hide_index=True)
+        st.dataframe(
+            baris, width="stretch", hide_index=True,
+            column_config={
+                "MRR": st.column_config.NumberColumn(format="%.4f"),
+                "Naskah": st.column_config.NumberColumn(format="%.3f"),
+                "Selisih": st.column_config.NumberColumn(format="%+.4f"),
+                "Waktu (s)": st.column_config.NumberColumn(format="%.2f"),
+            },
+        )
         st.caption(
-            f"{len(kand)} kueri ber-qrels. Selisih diharapkan 0,000 untuk M1/M2 dan ≤0,002 untuk "
-            "M3/M4 bila backend ONNX dan vektor naskah dipakai."
+            f"{simpan_eval['n']} kueri ber-qrels. Selisih diharapkan 0,0000 untuk M1/M2 dan "
+            "≤0,002 untuk M3/M4 bila vektor acuan dipakai."
         )
 
 st.divider()

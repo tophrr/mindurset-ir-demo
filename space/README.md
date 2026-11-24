@@ -3,9 +3,8 @@ title: Mind-Ur-Set IR Demo
 emoji: 🔎
 colorFrom: indigo
 colorTo: gray
-sdk: streamlit
-sdk_version: 1.67.0
-app_file: app.py
+sdk: docker
+app_port: 8501
 pinned: false
 license: mit
 short_description: Perbandingan empat konfigurasi retrieval pada korpus psikoedukasi
