@@ -53,7 +53,7 @@ POLA_RISIKO = (
 )
 _RE_RISIKO = re.compile("|".join(POLA_RISIKO), re.IGNORECASE)
 
-st.set_page_config(page_title="Mind-Ur-Set · IR Demo", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="Mind-Ur-Set Information Retrieval", page_icon="🔎", layout="wide")
 
 
 # --------------------------------------------------------------------------
@@ -96,7 +96,7 @@ def deteksi_risiko(teks: str) -> list[str]:
 def rentang_halaman(halaman) -> str:
     """[77, 78, 79, 82] -> '77–79, 82'."""
     if not halaman:
-        return "—"
+        return "tanpa halaman"
     if isinstance(halaman, int):
         return str(halaman)
     angka = sorted({int(h) for h in halaman})
@@ -138,6 +138,57 @@ def pencari(backend: str | None):
     return fungsi
 
 
+def tabel_perbandingan(hasil: dict[str, list[str]], relevan: set[str], topk: int) -> str:
+    """Tabel HTML: satu baris per peringkat, satu kolom per konfigurasi."""
+    kode = [n.split(" · ")[0] for n in hasil]
+    kepala = "".join(
+        f'<th><span class="kode">{k}</span><span class="metode">{n.split(" · ")[1]}</span></th>'
+        for k, n in zip(kode, hasil)
+    )
+    baris = []
+    for pos in range(topk):
+        sel = [f'<td class="peringkat">{pos + 1}</td>']
+        for nama in hasil:
+            urut = hasil[nama]
+            if pos >= len(urut):
+                sel.append('<td class="kosong">—</td>')
+                continue
+            doc_id = urut[pos]
+            d = KOR[doc_id]
+            sumber = NAMA_SUMBER.get(d.get("sumber", ""), d.get("sumber", "?"))
+            kelas = "sel relevan" if doc_id in relevan else "sel"
+            tanda = '<span class="tanda">✓</span>' if doc_id in relevan else ""
+            sel.append(
+                f'<td class="{kelas}"><span class="id">{doc_id}</span>{tanda}'
+                f'<span class="ket">{sumber} · hal. {rentang_halaman(d.get("halaman"))}</span></td>'
+            )
+        baris.append("<tr>" + "".join(sel) + "</tr>")
+
+    return f"""
+<style>
+.tabel-ir {{ width:100%; border-collapse:separate; border-spacing:0; font-size:0.86rem;
+             border:1px solid #D3DDF0; border-radius:10px; overflow:hidden; background:#fff; }}
+.tabel-ir th {{ background:#203080; color:#fff; text-align:left; padding:8px 10px; font-weight:600;
+                vertical-align:bottom; }}
+.tabel-ir th .kode {{ display:block; font-size:0.95rem; letter-spacing:0.02em; }}
+.tabel-ir th .metode {{ display:block; font-size:0.72rem; font-weight:400; opacity:0.85; }}
+.tabel-ir td {{ padding:7px 10px; border-top:1px solid #D3DDF0; vertical-align:top; color:#16225C; }}
+.tabel-ir tr:nth-child(even) td {{ background:#F7FAFF; }}
+.tabel-ir td.peringkat {{ width:38px; color:#565E70; font-variant-numeric:tabular-nums; }}
+.tabel-ir td.kosong {{ color:#9AA3B2; text-align:center; }}
+.tabel-ir .id {{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:0.8rem;
+                 color:#16225C; }}
+.tabel-ir .ket {{ display:block; font-size:0.72rem; color:#565E70; margin-top:2px; }}
+.tabel-ir .tanda {{ color:#2E7D32; font-weight:700; margin-left:6px; }}
+.tabel-ir td.relevan {{ background:#E9F5EC; box-shadow:inset 3px 0 0 #2E7D32; }}
+</style>
+<table class="tabel-ir">
+  <thead><tr><th class="peringkat">#</th>{kepala}</tr></thead>
+  <tbody>{''.join(baris)}</tbody>
+</table>
+"""
+
+
 def kartu_bantuan() -> None:
     st.error(
         "**Kueri ini menyentuh tema risiko tinggi.** Demo ini tidak dapat menilai risiko dan tidak "
@@ -154,12 +205,10 @@ def kartu_bantuan() -> None:
 # --------------------------------------------------------------------------
 # kepala halaman
 # --------------------------------------------------------------------------
-st.title("🔎 Mind-Ur-Set · Demo Retrieval")
-st.warning(
-    "**Demo penelitian, bukan nasihat klinis.** Sistem hanya menampilkan kutipan dari korpus "
-    "psikoedukasi tertutup dan tidak menegakkan diagnosis. Bila Anda atau orang di sekitar Anda "
-    "dalam bahaya, hubungi **119 ext. 8 (SEJIWA)** atau layanan darurat setempat.",
-    icon="⚠️",
+st.title("Mind-Ur-Set Information Retrieval")
+st.caption(
+    "Korpus psikoedukasi tertutup 153 chunk · 100 kueri uji · empat konfigurasi retrieval · "
+    "tanpa model generatif."
 )
 
 with st.sidebar:
@@ -287,16 +336,12 @@ with tab_cari:
 
         if len(hasil) > 1:
             st.subheader("Perbandingan peringkat")
-            baris = []
-            for pos in range(simpan["topk"]):
-                isi = {"#": pos + 1}
-                for nama, urut in hasil.items():
-                    d = urut[pos] if pos < len(urut) else "—"
-                    if d != "—" and simpan["qid"] and d in relevan:
-                        d = f"{d} ✅"
-                    isi[nama.split(" · ")[0]] = d
-                baris.append(isi)
-            st.dataframe(baris, width="stretch", hide_index=True)
+            st.markdown(
+                tabel_perbandingan(hasil, relevan if simpan["qid"] else set(), simpan["topk"]),
+                unsafe_allow_html=True,
+            )
+            if simpan["qid"]:
+                st.caption("Sel berlatar hijau menandai chunk yang relevan menurut qrels final.")
 
         for nama, urut in hasil.items():
             st.subheader(nama)

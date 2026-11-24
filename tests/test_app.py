@@ -14,7 +14,7 @@ APP = str(ROOT / "app.py")
 def test_app_memuat_tanpa_exception():
     at = AppTest.from_file(APP, default_timeout=120).run()
     assert not at.exception
-    assert at.title[0].value.startswith("🔎")
+    assert at.title[0].value == "Mind-Ur-Set Information Retrieval"
 
 
 def test_pencarian_menampilkan_hasil():

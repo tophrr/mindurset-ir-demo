@@ -47,7 +47,7 @@ pip install -r requirements-torch.txt
 
 | Bagian | Keterangan |
 |---|---|
-| Peringatan keselamatan | Banner "bukan nasihat klinis" + rujukan 119 ext. 8 (SEJIWA) |
+| Kartu keselamatan | Muncul hanya untuk kueri berfrasa risiko, dengan rujukan 119 ext. 8 (SEJIWA), 112, IGD, dan findahelpline.com |
 | Mode kueri bebas | Tulis keluhan apa pun, lihat peringkat *chunk* |
 | Mode kueri uji | Pilih dari 88 kueri uji yang punya kunci relevansi |
 | Pemilih konfigurasi | Bandingkan M1–M4 berdampingan |
