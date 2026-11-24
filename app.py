@@ -22,6 +22,7 @@ import numpy as np
 import streamlit as st
 
 import encoder
+import ui_tema
 from mesin import BM25, TFIDF, cari_dense_vektor, rrf, tokenize
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -54,6 +55,7 @@ POLA_RISIKO = (
 _RE_RISIKO = re.compile("|".join(POLA_RISIKO), re.IGNORECASE)
 
 st.set_page_config(page_title="Mind-Ur-Set Information Retrieval", page_icon="🔎", layout="wide")
+ui_tema.pasang()
 
 
 # --------------------------------------------------------------------------
@@ -212,10 +214,11 @@ def kartu_bantuan() -> None:
 # --------------------------------------------------------------------------
 # kepala halaman
 # --------------------------------------------------------------------------
-st.title("Mind-Ur-Set Information Retrieval")
-st.caption(
-    "Korpus psikoedukasi tertutup 153 chunk · 100 kueri uji · empat konfigurasi retrieval · "
-    "tanpa model generatif."
+ui_tema.hero(
+    "Mind-Ur-Set Information Retrieval",
+    "Sistem hanya mengembalikan kutipan dari korpus psikoedukasi tertutup beserta halaman "
+    "sumbernya; tidak ada model generatif yang menyusun jawaban.",
+    [f"{len(KORPUS)} chunk", f"{len(KUERI)} kueri uji", "M1–M4", "M4 hybrid terbaik"],
 )
 
 with st.sidebar:
@@ -270,13 +273,18 @@ with tab_cari:
             st.info(f"**{qid}** ({q['bahasa']}) — {len(QRELS[qid])} chunk relevan · “{teks_kueri}”")
     with kol_kanan:
         bawaan = [n for n in tersedia_nama if n.startswith(("M2", "M3", "M4"))] or tersedia_nama[:2]
-        metode_pilih = st.multiselect(
+        st.markdown("**Konfigurasi**")
+        pilih_kode = st.pills(
             "Konfigurasi",
-            tersedia_nama,
+            options=tersedia_nama,
             default=bawaan,
+            selection_mode="multi",
             format_func=lambda n: n.split(" · ")[0],
+            label_visibility="collapsed",
             help="M1 VSM TF-IDF · M2 BM25 · M3 BGE-M3 · M4 RRF",
         )
+        metode_pilih = pilih_kode or []
+        st.caption("Pilih satu atau beberapa konfigurasi untuk dibandingkan.")
         topk = st.slider("Kedalaman peringkat", 3, 20, 10)
         bahasa = st.radio("Saringan bahasa dokumen", ["Semua", "Indonesia", "Inggris"])
         tampil_teks = st.slider("Panjang teks ditampilkan (karakter)", 200, 1200, 400, step=100)
@@ -353,22 +361,41 @@ with tab_cari:
         for nama, urut in hasil.items():
             st.subheader(nama)
             if not urut:
-                st.write("_tidak ada hasil; tidak ada kata kueri yang cocok pada konfigurasi ini._")
+                ui_tema.kosong(
+                    "Tidak ada hasil",
+                    "Tidak ada kata kueri yang cocok pada konfigurasi ini. Coba konfigurasi lain "
+                    "atau longgarkan saringan bahasa.",
+                )
                 continue
+            kartu_html = []
             for pos, doc_id in enumerate(urut, start=1):
                 d = KOR[doc_id]
-                benar = doc_id in relevan
-                tanda = "✅ " if benar else ("· " if simpan["qid"] else "")
-                judul = f"{tanda}**{pos}.** `{doc_id}` · {lokasi(d)}"
-                with st.expander(judul, expanded=(pos <= 2 and not simpan["risiko"])):
-                    teks = d["teks"]
-                    st.write(teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""))
-                    sama, cakupan = tumpang_tindih(simpan["teks"], doc_id)
-                    st.caption(
-                        f"{d.get('token', '?')} token · kemiripan istilah {cakupan:.0%} · "
-                        f"istilah sama: {', '.join(sama[:12]) if sama else '—'}"
+                teks = d["teks"]
+                sama, cakupan = tumpang_tindih(simpan["teks"], doc_id)
+                kartu_html.append(
+                    ui_tema.kartu(
+                        pos=pos,
+                        doc_id=doc_id,
+                        lokasi=lokasi(d),
+                        teks=teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""),
+                        relevan=doc_id in relevan,
+                        catatan=[
+                            f"{d.get('token', '?')} token",
+                            f"kemiripan istilah {cakupan:.0%}",
+                            f"istilah sama: {', '.join(sama[:10]) if sama else '—'}",
+                            f"lisensi {d.get('lisensi', '?')}",
+                        ],
+                        buka=(pos <= 2 and not simpan["risiko"]),
                     )
-                    st.caption(f"Lisensi: {d.get('lisensi', '?')}")
+                )
+            st.markdown("".join(kartu_html), unsafe_allow_html=True)
+    else:
+        ui_tema.kosong(
+            "Belum ada hasil",
+            "Tulis keluhan pada kotak di atas lalu tekan Cari — atau pilih mode “Kueri uji” "
+            "untuk mencoba kueri yang sudah punya kunci relevansi. Contoh: “sulit tidur karena "
+            "pikiran berputar”, “cara menenangkan diri saat panik”, “how to stop avoiding people”.",
+        )
 
 # ==========================================================================
 # TAB 2 — evaluasi

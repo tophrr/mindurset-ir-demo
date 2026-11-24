@@ -47,6 +47,8 @@ pip install -r requirements-torch.txt
 
 | Bagian | Keterangan |
 |---|---|
+| Hero dan tema | Warna dan tipografi memakai token aplikasi Mind-Ur-Set (`Color.kt`): navy #203080, kanvas #EEF4FF, tinta #16225C |
+| Kartu hasil | Satu kartu per *chunk*, dapat dibuka; *chunk* relevan bergaris dan berlatar hijau |
 | Kartu keselamatan | Muncul hanya untuk kueri berfrasa risiko, dengan rujukan 119 ext. 8 (SEJIWA), 112, IGD, dan findahelpline.com |
 | Mode kueri bebas | Tulis keluhan apa pun, lihat peringkat *chunk* |
 | Mode kueri uji | Pilih dari 88 kueri uji yang punya kunci relevansi |
@@ -102,6 +104,7 @@ tetap bergeser (kosinus ≈0,98 terhadap vektor naskah) karena int8 tidak determ
 ```
 mindurset-ir-demo/
 ├── app.py                 antarmuka Streamlit (tab Pencarian dan Evaluasi)
+├── ui_tema.py             skin visual Mind-Ur-Set: CSS, hero, kartu, lencana
 ├── mesin.py               M1, M2, M3, M4 + metrik (tanpa Streamlit)
 ├── encoder.py             pengodean kueri ONNX int8, cadangan torch
 ├── siapkan_data.py        sinkron data dari repo who-ir, periksa, bangun ulang vektor
@@ -134,9 +137,10 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
-Sebelas uji: kesesuaian jumlah data, tokenisasi vs harness, MRR M1/M2, determinisme RRF, metrik
-pada contoh kecil, aplikasi memuat, pencarian menampilkan hasil, kartu risiko, kueri tanpa kata
-ditolak, hasil bertahan saat slider diubah, dan lima varian frasa risiko terdeteksi.
+Tiga belas uji: kesesuaian jumlah data, tokenisasi vs harness, MRR M1/M2, determinisme RRF, metrik
+pada contoh kecil, aplikasi memuat, hero dan *empty state*, pencarian menampilkan hasil, kartu hasil
+ter-render, kartu risiko, kueri tanpa kata ditolak, hasil bertahan saat slider diubah, dan lima
+varian frasa risiko terdeteksi.
 
 ## Deploy
 

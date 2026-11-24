@@ -1,4 +1,3 @@
-# Tema mengikuti token warna aplikasi Mind-Ur-Set (app/src/main/java/.../ui/theme/Color.kt)
 [theme]
 primaryColor = "#203080"
 backgroundColor = "#EEF4FF"
@@ -8,6 +7,9 @@ font = "sans serif"
 
 [server]
 headless = true
+
+[client]
+toolbarMode = "minimal"
 
 [browser]
 gatherUsageStats = false
