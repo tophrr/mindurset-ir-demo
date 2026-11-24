@@ -96,7 +96,7 @@ def deteksi_risiko(teks: str) -> list[str]:
 def rentang_halaman(halaman) -> str:
     """[77, 78, 79, 82] -> '77–79, 82'."""
     if not halaman:
-        return "tanpa halaman"
+        return ""
     if isinstance(halaman, int):
         return str(halaman)
     angka = sorted({int(h) for h in halaman})
@@ -108,6 +108,13 @@ def rentang_halaman(halaman) -> str:
             if b is not None:
                 awal = b
     return ", ".join(hasil)
+
+
+def lokasi(d: dict) -> str:
+    """'WHO DWM (ID) · hal. 77–80' atau 'Kartu koping · tanpa nomor halaman'."""
+    sumber = NAMA_SUMBER.get(d.get("sumber", ""), d.get("sumber", "?"))
+    hal = rentang_halaman(d.get("halaman"))
+    return f"{sumber} · hal. {hal}" if hal else f"{sumber} · tanpa nomor halaman"
 
 
 def tumpang_tindih(kueri: str, doc_id: str) -> tuple[list[str], float]:
@@ -155,12 +162,11 @@ def tabel_perbandingan(hasil: dict[str, list[str]], relevan: set[str], topk: int
                 continue
             doc_id = urut[pos]
             d = KOR[doc_id]
-            sumber = NAMA_SUMBER.get(d.get("sumber", ""), d.get("sumber", "?"))
             kelas = "sel relevan" if doc_id in relevan else "sel"
             tanda = '<span class="tanda">✓</span>' if doc_id in relevan else ""
             sel.append(
                 f'<td class="{kelas}"><span class="id">{doc_id}</span>{tanda}'
-                f'<span class="ket">{sumber} · hal. {rentang_halaman(d.get("halaman"))}</span></td>'
+                f'<span class="ket">{lokasi(d)}</span></td>'
             )
         baris.append("<tr>" + "".join(sel) + "</tr>")
 
@@ -180,7 +186,8 @@ def tabel_perbandingan(hasil: dict[str, list[str]], relevan: set[str], topk: int
                  color:#16225C; }}
 .tabel-ir .ket {{ display:block; font-size:0.72rem; color:#565E70; margin-top:2px; }}
 .tabel-ir .tanda {{ color:#2E7D32; font-weight:700; margin-left:6px; }}
-.tabel-ir td.relevan {{ background:#E9F5EC; box-shadow:inset 3px 0 0 #2E7D32; }}
+.tabel-ir td.relevan, .tabel-ir tr:nth-child(even) td.relevan {{
+    background:#E3F2E7; box-shadow:inset 3px 0 0 #2E7D32; }}
 </style>
 <table class="tabel-ir">
   <thead><tr><th class="peringkat">#</th>{kepala}</tr></thead>
@@ -352,9 +359,7 @@ with tab_cari:
                 d = KOR[doc_id]
                 benar = doc_id in relevan
                 tanda = "✅ " if benar else ("· " if simpan["qid"] else "")
-                sumber = NAMA_SUMBER.get(d.get("sumber", ""), d.get("sumber", "?"))
-                judul = (f"{tanda}**{pos}.** `{doc_id}` · {sumber} · "
-                         f"hal. {rentang_halaman(d.get('halaman'))}")
+                judul = f"{tanda}**{pos}.** `{doc_id}` · {lokasi(d)}"
                 with st.expander(judul, expanded=(pos <= 2 and not simpan["risiko"])):
                     teks = d["teks"]
                     st.write(teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""))
