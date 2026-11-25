@@ -113,8 +113,24 @@ button[data-variant="pills"] {{ padding: 4px 14px !important; }}
 .stTabs [data-baseweb="tab"] {{ border-radius: 10px 10px 0 0; }}
 .stTabs [aria-selected="true"] {{ background: #fff; }}
 h3 {{ font-size: 1.02rem; color: {INK}; margin-top: 1.1rem; }}
+[data-testid="stColumn"] h3 {{ font-size: .95rem; line-height: 1.25; min-height: 2.5em;
+    margin-top: .6rem; margin-bottom: .4rem; }}
 [data-testid="stMetricValue"] {{ font-size: 1.25rem; color: {NAVY}; }}
 [data-testid="stMetricDelta"] {{ font-size: .75rem; }}
+.kartu.ringkas summary {{ padding: 9px 11px; gap: 6px; }}
+.kartu.ringkas .id {{ font-size: .82rem; }}
+.kartu.ringkas .lokasi {{ display: block; width: 100%; font-size: .7rem; }}
+.kartu.ringkas .badan {{ padding: 0 11px 10px; }}
+.kartu.ringkas .badan p {{ font-size: .82rem; line-height: 1.5; }}
+.kartu.ringkas .meta {{ font-size: .7rem; }}
+@media (max-width: 640px) {{
+    .block-container {{ padding-top: .5rem; }}
+    .hero {{ padding: 16px 18px; border-radius: 16px; }}
+    .hero h1 {{ font-size: 1.12rem; }}
+    .hero p {{ font-size: .78rem; }}
+    .hero .deret span {{ font-size: .68rem; padding: 2px 8px; }}
+    [data-testid="stColumn"] h3 {{ min-height: 0; }}
+}}
 .kosong {{
     background: #fff; border: 1px dashed {OUTLINE}; border-radius: 16px;
     padding: 22px 24px; color: {MUTED}; font-size: .88rem;
@@ -152,10 +168,14 @@ def kartu(
     relevan: bool,
     catatan: list[str] | None = None,
     buka: bool = False,
+    ringkas: bool = False,
 ) -> str:
     """Satu kartu hasil. Memakai <details> agar bisa dibuka tanpa st.expander."""
-    tanda = '<span class="tanda">✓ relevan</span>' if relevan else ""
+    tanda = ('<span class="tanda">✓</span>' if ringkas else '<span class="tanda">✓ relevan</span>') \
+        if relevan else ""
     kelas = "kartu relevan" if relevan else "kartu"
+    if ringkas:
+        kelas += " ringkas"
     meta = " · ".join(html.escape(c) for c in (catatan or []))
     return (
         f'<details class="{kelas}"{" open" if buka else ""}>'

@@ -48,7 +48,9 @@ pip install -r requirements-torch.txt
 | Bagian | Keterangan |
 |---|---|
 | Hero dan tema | Warna dan tipografi memakai token aplikasi Mind-Ur-Set (`Color.kt`): navy #203080, kanvas #EEF4FF, tinta #16225C |
-| Kartu hasil | Satu kartu per *chunk*, dapat dibuka; *chunk* relevan bergaris dan berlatar hijau |
+| Kartu hasil | Satu kartu per *chunk* per konfigurasi, tersusun berdampingan (M1 → M4); *chunk* relevan bergaris dan berlatar hijau |
+| Opsi lanjutan | Kedalaman, saringan bahasa, dan panjang teks disembunyikan dalam *expander* agar hasil muncul lebih cepat |
+| Tabel perbandingan | Dilipat di bawah hasil, berisi peringkat M1–M4 berdampingan |
 | Kartu keselamatan | Muncul hanya untuk kueri berfrasa risiko, dengan rujukan 119 ext. 8 (SEJIWA), 112, IGD, dan findahelpline.com |
 | Mode kueri bebas | Tulis keluhan apa pun, lihat peringkat *chunk* |
 | Mode kueri uji | Pilih dari 88 kueri uji yang punya kunci relevansi |

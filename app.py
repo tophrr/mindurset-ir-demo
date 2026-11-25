@@ -29,6 +29,7 @@ ROOT = pathlib.Path(__file__).resolve().parent
 DATA = ROOT / "data"
 EMB = DATA / "embedding" / "emb_chunk_cls.npy"
 PAPER = {"M1": 0.390, "M2": 0.397, "M3": 0.420, "M4": 0.500}
+RINGKAS = {"M1": "VSM", "M2": "BM25", "M3": "BGE-M3", "M4": "RRF"}
 MAKS_KARAKTER = 500
 
 NAMA_SUMBER = {
@@ -249,47 +250,49 @@ with tab_cari:
     fungsi = pencari(backend)
     tersedia_nama = list(fungsi)
 
-    kol_kiri, kol_kanan = st.columns([2, 1])
-    with kol_kiri:
-        mode = st.radio(
-            "Mode",
-            ["Kueri bebas", "Kueri uji (ada qrels)"],
-            horizontal=True,
-            help="Kueri uji punya kunci relevansi, jadi ketepatan bisa dihitung.",
+    mode = st.radio(
+        "Mode",
+        ["Kueri bebas", "Kueri uji (ada qrels)"],
+        horizontal=True,
+        help="Kueri uji punya kunci relevansi, jadi ketepatan bisa dihitung.",
+    )
+    if mode == "Kueri bebas":
+        teks_kueri = st.text_area(
+            "Tulis keluhan / pertanyaan",
+            value="saya tidak bisa tidur, pikiran saya terus berputar",
+            height=80,
+            max_chars=MAKS_KARAKTER,
         )
-        if mode == "Kueri bebas":
-            teks_kueri = st.text_area(
-                "Tulis keluhan / pertanyaan",
-                value="saya tidak bisa tidur, pikiran saya terus berputar",
-                height=90,
-                max_chars=MAKS_KARAKTER,
-            )
-            qid = None
-        else:
-            opsi = {f"{q['qid']} · {q['teks'][:60]}…": q for q in KUERI if q["qid"] in QRELS}
-            pilih = st.selectbox("Pilih kueri uji", list(opsi))
-            q = opsi[pilih]
-            teks_kueri, qid = q["teks"], q["qid"]
-            st.info(f"**{qid}** ({q['bahasa']}) — {len(QRELS[qid])} chunk relevan · “{teks_kueri}”")
-    with kol_kanan:
+        qid = None
+    else:
+        opsi = {f"{q['qid']} · {q['teks'][:60]}…": q for q in KUERI if q["qid"] in QRELS}
+        pilih = st.selectbox("Pilih kueri uji", list(opsi))
+        q = opsi[pilih]
+        teks_kueri, qid = q["teks"], q["qid"]
+        st.caption(f"{qid} ({q['bahasa']}) · {len(QRELS[qid])} chunk relevan menurut qrels")
+
+    baris = st.columns([3, 1], vertical_alignment="bottom")
+    with baris[0]:
         bawaan = [n for n in tersedia_nama if n.startswith(("M2", "M3", "M4"))] or tersedia_nama[:2]
-        st.markdown("**Konfigurasi**")
         pilih_kode = st.pills(
             "Konfigurasi",
             options=tersedia_nama,
             default=bawaan,
             selection_mode="multi",
             format_func=lambda n: n.split(" · ")[0],
-            label_visibility="collapsed",
-            help="M1 VSM TF-IDF · M2 BM25 · M3 BGE-M3 · M4 RRF",
+            help="Pilih satu atau beberapa konfigurasi untuk dibandingkan.",
         )
         metode_pilih = pilih_kode or []
-        st.caption("Pilih satu atau beberapa konfigurasi untuk dibandingkan.")
-        topk = st.slider("Kedalaman peringkat", 3, 20, 10)
-        bahasa = st.radio("Saringan bahasa dokumen", ["Semua", "Indonesia", "Inggris"])
-        tampil_teks = st.slider("Panjang teks ditampilkan (karakter)", 200, 1200, 400, step=100)
+    with baris[1]:
+        jalan = st.button("Cari", type="primary", width="stretch")
 
-    jalan = st.button("Cari", type="primary", width="stretch")
+    with st.expander("Opsi lanjutan", expanded=False):
+        kol_opsi = st.columns(3)
+        topk = kol_opsi[0].slider("Kedalaman peringkat", 3, 20, 10)
+        bahasa = kol_opsi[1].radio("Saringan bahasa dokumen", ["Semua", "Indonesia", "Inggris"])
+        tampil_teks = kol_opsi[2].slider(
+            "Panjang teks ditampilkan (karakter)", 200, 1200, 400, step=100
+        )
 
     if jalan:
         if not teks_kueri.strip():
@@ -332,63 +335,66 @@ with tab_cari:
             kartu_bantuan()
 
         if simpan["qid"]:
-            st.subheader("Ringkasan ketepatan")
             kol = st.columns(len(hasil))
             for c, (nama, urut) in zip(kol, hasil.items()):
                 hit = len([d for d in urut if d in relevan])
                 k = len(urut) or 1
                 rr = next((1.0 / i for i, d in enumerate(urut, 1) if d in relevan), 0.0)
                 c.metric(nama.split(" · ")[0], f"P@{k} {hit / k:.2f}", f"RR {rr:.3f}")
-            st.caption(
-                "P@K = proporsi chunk relevan pada hasil teratas; RR = 1/peringkat relevan pertama. "
-                "K mengikuti jumlah hasil setelah saringan bahasa, bukan kedalaman yang diminta."
-            )
 
         st.caption(
-            f"Latensi pencarian: **{simpan['lama']:.0f} ms** untuk {len(hasil)} konfigurasi "
-            f"(kedalaman {simpan['topk']}, backend {backend or 'leksikal saja'})."
+            f"{simpan['lama']:.0f} ms untuk {len(hasil)} konfigurasi · kedalaman {simpan['topk']} · "
+            f"backend {backend or 'leksikal saja'} · P@K = proporsi relevan di hasil teratas, "
+            "RR = 1/peringkat relevan pertama."
         )
 
-        if len(hasil) > 1:
-            st.subheader("Perbandingan peringkat")
-            st.markdown(
-                tabel_perbandingan(hasil, relevan if simpan["qid"] else set(), simpan["topk"]),
-                unsafe_allow_html=True,
-            )
-            if simpan["qid"]:
-                st.caption("Sel berlatar hijau menandai chunk yang relevan menurut qrels final.")
-
-        for nama, urut in hasil.items():
-            st.subheader(nama)
-            if not urut:
-                ui_tema.kosong(
-                    "Tidak ada hasil",
-                    "Tidak ada kata kueri yang cocok pada konfigurasi ini. Coba konfigurasi lain "
-                    "atau longgarkan saringan bahasa.",
-                )
-                continue
-            kartu_html = []
-            for pos, doc_id in enumerate(urut, start=1):
-                d = KOR[doc_id]
-                teks = d["teks"]
-                sama, cakupan = tumpang_tindih(simpan["teks"], doc_id)
-                kartu_html.append(
-                    ui_tema.kartu(
-                        pos=pos,
-                        doc_id=doc_id,
-                        lokasi=lokasi(d),
-                        teks=teks[:tampil_teks] + ("…" if len(teks) > tampil_teks else ""),
-                        relevan=doc_id in relevan,
-                        catatan=[
-                            f"{d.get('token', '?')} token",
-                            f"kemiripan istilah {cakupan:.0%}",
-                            f"istilah sama: {', '.join(sama[:10]) if sama else '—'}",
-                            f"lisensi {d.get('lisensi', '?')}",
-                        ],
-                        buka=(pos <= 2 and not simpan["risiko"]),
+        urut_konfig = {n: hasil[n] for n in sorted(hasil)}
+        if len(urut_konfig) > 1:
+            st.caption("Kolom diurutkan M1 → M4.")
+        kolom = st.columns(len(urut_konfig), gap="small")
+        for c, (nama, urut) in zip(kolom, urut_konfig.items()):
+            with c:
+                kode = nama.split(" · ")[0]
+                st.subheader(f"{kode} · {RINGKAS.get(kode, nama.split(' · ')[1])}")
+                if not urut:
+                    ui_tema.kosong(
+                        "Tidak ada hasil",
+                        "Tidak ada kata kueri yang cocok di konfigurasi ini.",
                     )
+                    continue
+                kartu_html = []
+                potong = min(tampil_teks, 320)
+                for pos, doc_id in enumerate(urut, start=1):
+                    d = KOR[doc_id]
+                    teks = d["teks"]
+                    sama, cakupan = tumpang_tindih(simpan["teks"], doc_id)
+                    kartu_html.append(
+                        ui_tema.kartu(
+                            pos=pos,
+                            doc_id=doc_id,
+                            lokasi=lokasi(d),
+                            teks=teks[:potong] + ("…" if len(teks) > potong else ""),
+                            relevan=doc_id in relevan,
+                            catatan=[
+                                f"{d.get('token', '?')} token",
+                                f"kemiripan {cakupan:.0%}",
+                                f"istilah: {', '.join(sama[:8]) if sama else '—'}",
+                                f"{d.get('lisensi', '?')}",
+                            ],
+                            buka=(pos <= 2 and not simpan["risiko"]),
+                            ringkas=True,
+                        )
+                    )
+                st.markdown("".join(kartu_html), unsafe_allow_html=True)
+
+        if len(hasil) > 1:
+            with st.expander("Perbandingan peringkat (tabel)"):
+                st.markdown(
+                    tabel_perbandingan(hasil, relevan if simpan["qid"] else set(), simpan["topk"]),
+                    unsafe_allow_html=True,
                 )
-            st.markdown("".join(kartu_html), unsafe_allow_html=True)
+                if simpan["qid"]:
+                    st.caption("Sel berlatar hijau menandai chunk relevan menurut qrels final.")
     else:
         ui_tema.kosong(
             "Belum ada hasil",
