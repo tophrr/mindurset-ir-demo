@@ -149,6 +149,9 @@ varian frasa risiko terdeteksi.
 Target utama: **Streamlit Community Cloud** (gratis). Aplikasi berjalan dari repo GitHub publik ini;
 `requirements.txt` sudah memuat semua dependensi dan `.streamlit/config.toml` memuat temanya.
 
+**Demo publik: <https://mindursetir.streamlit.app/>** — angka terukur dari hosting ada di
+`hasil/latensi_hosting.json` (MRR M1–M4 dan waktu kueri di mesin Cloud, bukan di laptop pengembang).
+
 1. Masuk ke <https://share.streamlit.io> dengan akun GitHub, pilih **Create app** → *Deploy a public app from GitHub*.
 2. Repository: `tophrr/mindurset-ir-demo`, branch `main`, main file path `app.py`.
 3. Deploy; URL publik berbentuk `https://mindurset-ir-demo.streamlit.app`.

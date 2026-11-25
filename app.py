@@ -402,8 +402,9 @@ with tab_cari:
 
         if len(hasil) > 1:
             with st.expander("Perbandingan peringkat (tabel)"):
+                urut_tabel = {n: hasil[n] for n in sorted(hasil)}
                 st.markdown(
-                    tabel_perbandingan(hasil, relevan if simpan["qid"] else set(), simpan["topk"]),
+                    tabel_perbandingan(urut_tabel, relevan if simpan["qid"] else set(), simpan["topk"]),
                     unsafe_allow_html=True,
                 )
                 if simpan["qid"]:

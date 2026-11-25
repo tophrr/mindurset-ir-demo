@@ -1,0 +1,25 @@
+{
+  "hosting": "Streamlit Community Cloud (gratis, cpu 2 core / RAM maks 2,7 GB)",
+  "url": "https://mindursetir.streamlit.app/",
+  "diukur_pada": "2026-11-25 23:47 WIB (dari halley, uplink dorm Tangerang)",
+  "catatan_arsitektur": "Aplikasi disajikan di dalam iframe /~/+/ ; pengujian otomatis harus masuk ke frame itu.",
+  "backend_dense": "ONNX int8 (model 568,5 MB diunduh saat start karena filesystem Cloud ephemeral)",
+  "kueri_contoh": {
+    "mode": "kueri uji (qid ber-qrels)",
+    "konfigurasi": ["M1", "M2", "M3", "M4"],
+    "waktu_4_konfigurasi_ms": 5,
+    "metrik_tampil": {
+      "M1": {"P@10": 0.10, "RR": 1.0},
+      "M2": {"P@10": 0.20, "RR": 0.2},
+      "M3": {"P@10": 0.30, "RR": 0.25},
+      "M4": {"P@10": 0.20, "RR": 1.0}
+    }
+  },
+  "evaluasi_88_kueri": {
+    "M1": {"mrr": 0.3904, "naskah": 0.390, "selisih": 0.0004, "waktu_s": 0.26},
+    "M2": {"mrr": 0.3966, "naskah": 0.397, "selisih": -0.0004, "waktu_s": 0.04},
+    "M3": {"mrr": 0.4201, "naskah": 0.420, "selisih": 0.0001, "waktu_s": 0.01},
+    "M4": {"mrr": 0.4997, "naskah": 0.500, "selisih": -0.0003, "waktu_s": 0.04}
+  },
+  "catatan": "Selisih M1/M2 timbul dari pembulatan angka naskah (3 desimal) dan pembagian 88 kueri; M3/M4 memakai vektor acuan sehingga tetap di bawah toleransi 0,002."
+}
