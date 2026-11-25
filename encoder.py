@@ -128,6 +128,28 @@ def muat(backend: str = "onnx", model_dir: str | None = None):
     return EncoderOnnx(model_dir)
 
 
+def model_ada() -> bool:
+    """Model int8 sudah lengkap di disk (bukan unduhan terpotong)."""
+    try:
+        berkas = letak_model() / BERKAS_MODEL
+    except FileNotFoundError:
+        return False
+    # model int8 yang utuh berukuran ~540 MB; berkas kecil berarti unduhan belum selesai
+    return berkas.stat().st_size > 100 * 1024 * 1024
+
+
+def bisa_unduh(backend: str = "onnx") -> bool:
+    """Backend ONNX dapat dipakai setelah modelnya diunduh (pustaka sudah terpasang)."""
+    if backend != "onnx":
+        return tersedia(backend)
+    try:
+        import onnxruntime  # noqa: F401
+        import tokenizers  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
 def tersedia(backend: str = "onnx") -> bool:
     """Apakah backend bisa dipakai di mesin ini (tanpa memuat model)."""
     if backend == "torch":
@@ -136,13 +158,4 @@ def tersedia(backend: str = "onnx") -> bool:
         except ImportError:
             return False
         return True
-    try:
-        import onnxruntime  # noqa: F401
-    except ImportError:
-        return False
-    try:
-        berkas = letak_model() / BERKAS_MODEL
-    except FileNotFoundError:
-        return False
-    # model int8 yang utuh berukuran ~540 MB; berkas kecil berarti unduhan belum selesai
-    return berkas.stat().st_size > 100 * 1024 * 1024
+    return bisa_unduh("onnx") and model_ada()

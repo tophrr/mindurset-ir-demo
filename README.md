@@ -146,19 +146,27 @@ varian frasa risiko terdeteksi.
 
 ## Deploy
 
-Target: **Hugging Face Spaces** dengan **SDK Docker** (berkas `Dockerfile` sudah disertakan).
-Model ONNX int8 (568 MB) diunduh saat *build* lewat `python unduh_model.py`, bukan saat permintaan
-pertama, sehingga M3/M4 langsung aktif setelah Space selesai dibangun.
+Target utama: **Streamlit Community Cloud** (gratis). Aplikasi berjalan dari repo GitHub publik ini;
+`requirements.txt` sudah memuat semua dependensi dan `.streamlit/config.toml` memuat temanya.
 
-1. Buat Space dengan SDK **Docker**, publik.
-2. Salin isi repo ini; front-matter Space sudah ada di `space/README.md` (gunakan berkas itu
-   sebagai `README.md` Space).
-3. `Dockerfile` menjalankan `python unduh_model.py` pada tahap build; `BGE_MODEL_DIR` sudah di-set
-   ke `/app/models/bge-m3-onnx` di dalam image.
-4. Bila ingin menghindari model di dalam image, unduh dari *dataset* Hugging Face pada startup dan
-   set `BGE_MODEL_DIR` sesuai lokasinya.
+1. Masuk ke <https://share.streamlit.io> dengan akun GitHub, pilih **Create app** → *Deploy a public app from GitHub*.
+2. Repository: `tophrr/mindurset-ir-demo`, branch `main`, main file path `app.py`.
+3. Deploy; URL publik berbentuk `https://mindurset-ir-demo.streamlit.app`.
 
-Tanpa model, Space tetap hidup dengan M1/M2; tab Evaluasi hanya menghitung dua konfigurasi itu.
+Catatan sumber daya Community Cloud (per dokumentasi Streamlit, Februari 2024): 2 core CPU, memori
+maksimum 2,7 GB, penyimpanan *ephemeral* (repo di-clone ulang setiap reboot), dan aplikasi tidur
+setelah 12 jam tanpa kunjungan. Karena penyimpanan tidak tetap, model dense tidak ikut repo:
+saat start `app.py` memanggil `unduh_model.pastikan()` dan mengunduh BGE-M3 int8 (568 MB) sekali per
+sesi, jadi kunjungan pertama setelah bangun tidur menunggu unduhan itu. Backend dense hanya butuh
+±1 GB RSS, aman di bawah batas 2,7 GB. Bila unduhan gagal, aplikasi tetap hidup dengan M1 dan M2.
+
+Alternatif: **Hugging Face Spaces** dengan SDK Docker (`Dockerfile` disertakan). Sejak 2026 Docker
+Space pada perangkat keras `cpu-basic` memerlukan langganan PRO, sedangkan static Space gratis.
+Langkahnya: buat Space SDK Docker, lalu pakai `space/README.md` sebagai `README.md` Space; model
+diunduh saat tahap build oleh `python unduh_model.py`, dan `BGE_MODEL_DIR` sudah di-set ke
+`/app/models/bge-m3-onnx` di dalam image.
+
+Tanpa model, aplikasi tetap hidup dengan M1/M2; tab Evaluasi hanya menghitung dua konfigurasi itu.
 
 ## Lisensi dan atribusi
 

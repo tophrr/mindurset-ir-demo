@@ -90,6 +90,19 @@ M1, M2 = muat_leksikal(len(KORPUS))
 BACKEND_TERSEDIA = [b for b in ("onnx", "torch") if encoder.tersedia(b)]
 NAMA_BACKEND = {"onnx": "ONNX int8 (angka naskah)", "torch": "torch fp32 (pembanding)"}
 
+# Di hosting tanpa penyimpanan tetap (Streamlit Community Cloud meng-clone ulang repo setiap
+# reboot) model dense belum ada. Unduh sekali di awal agar M3/M4 tetap bisa dipakai; bila
+# gagal, aplikasi tetap hidup dengan M1 dan M2 saja.
+if not BACKEND_TERSEDIA and encoder.bisa_unduh("onnx"):
+    try:
+        import unduh_model
+
+        with st.spinner("Mengunduh model BGE-M3 int8 (±559 MB) — sekali per sesi…"):
+            unduh_model.pastikan(senyap=True)
+        BACKEND_TERSEDIA = ["onnx"]
+    except Exception as e:  # noqa: BLE001
+        st.caption(f"Model dense gagal disiapkan ({e}); demo berjalan dengan M1 dan M2.")
+
 
 def deteksi_risiko(teks: str) -> list[str]:
     rapih = " ".join(re.sub(r"[^\w\s]", " ", teks.lower()).replace("_", " ").split())

@@ -9,6 +9,7 @@ Dipakai saat build Space atau saat menyiapkan mesin baru.
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
 import sys
 import time
@@ -23,6 +24,9 @@ BERKAS = {
     "model_int8.onnx": f"{BASE}/onnx/model_int8.onnx",
 }
 TUJUAN = pathlib.Path(__file__).resolve().parent / "models" / "bge-m3-onnx"
+# model int8 yang utuh berukuran ~540 MB; berkas lebih kecil berarti unduhan terpotong
+UKURAN_MIN = {"model_int8.onnx": 100 * 1024 * 1024}
+UKURAN_MIN_BAWAAN = 200
 
 
 def unduh(url: str, jalur: pathlib.Path, percobaan: int = 3, timeout: int = 120) -> None:
@@ -42,23 +46,39 @@ def unduh(url: str, jalur: pathlib.Path, percobaan: int = 3, timeout: int = 120)
     raise RuntimeError(f"gagal mengunduh {jalur.name} setelah {percobaan} percobaan")
 
 
+def pastikan(tujuan: pathlib.Path | None = None, paksa: bool = False,
+             senyap: bool = False) -> pathlib.Path:
+    """Unduh berkas model yang belum ada/terpotong; kembalikan folder modelnya.
+
+    Dipakai `main()` dan oleh aplikasi saat model belum ada di mesin hosting
+    (mis. Streamlit Community Cloud, yang filesystem-nya kosong setiap reboot).
+    """
+    folder = pathlib.Path(tujuan or os.environ.get("BGE_MODEL_DIR") or TUJUAN)
+    folder.mkdir(parents=True, exist_ok=True)
+    for nama, url in BERKAS.items():
+        jalur = folder / nama
+        minimum = UKURAN_MIN.get(nama, UKURAN_MIN_BAWAAN)
+        if jalur.exists() and jalur.stat().st_size >= minimum and not paksa:
+            if not senyap:
+                print(f"= {nama} sudah ada ({jalur.stat().st_size / 1e6:.1f} MB)")
+            continue
+        if not senyap:
+            print(f"→ {jalur.name}", flush=True)
+        unduh(url, jalur)
+    return folder
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--paksa", action="store_true")
     a = ap.parse_args()
-    TUJUAN.mkdir(parents=True, exist_ok=True)
-    for nama, url in BERKAS.items():
-        jalur = TUJUAN / nama
-        if jalur.exists() and jalur.stat().st_size > 1024 and not a.paksa:
-            print(f"= {nama} sudah ada ({jalur.stat().st_size / 1e6:.1f} MB)")
-            continue
-        try:
-            unduh(url, jalur)
-        except Exception as e:  # noqa: BLE001
-            print(f"gagal mengunduh {nama}: {e}", file=sys.stderr)
-            return 1
-    total = sum(f.stat().st_size for f in TUJUAN.iterdir())
-    print(f"selesai: {TUJUAN} ({total / 1e6:.0f} MB)")
+    try:
+        folder = pastikan(paksa=a.paksa)
+    except Exception as e:  # noqa: BLE001
+        print(f"gagal mengunduh model: {e}", file=sys.stderr)
+        return 1
+    total = sum(f.stat().st_size for f in folder.iterdir())
+    print(f"selesai: {folder} ({total / 1e6:.0f} MB)")
     return 0
 
 
