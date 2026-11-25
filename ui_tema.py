@@ -109,9 +109,19 @@ button[data-variant="pills"] {{ padding: 4px 14px !important; }}
     background: {PALE}; border-right: 1px solid {OUTLINE};
 }}
 [data-testid="stSidebar"] h2 {{ font-size: 1rem; }}
-.stTabs [data-baseweb="tab-list"] {{ gap: 4px; }}
-.stTabs [data-baseweb="tab"] {{ border-radius: 10px 10px 0 0; }}
-.stTabs [aria-selected="true"] {{ background: #fff; }}
+.stTabs [role="tablist"], .stTabs [data-baseweb="tab-list"] {{ gap: 6px; }}
+.stTabs [role="tab"], .stTabs [data-baseweb="tab"] {{
+    padding: 8px 16px; border-radius: 10px 10px 0 0; color: {MUTED};
+    transition: background .15s ease, color .15s ease;
+}}
+.stTabs [role="tab"] p, .stTabs [data-baseweb="tab"] p {{ font-weight: 500; letter-spacing: .01em; }}
+.stTabs [role="tab"][data-selected="true"], .stTabs [aria-selected="true"] {{
+    background: #fff; color: {NAVY};
+    box-shadow: inset 0 1px 0 {OUTLINE}, inset 1px 0 0 {OUTLINE}, inset -1px 0 0 {OUTLINE};
+}}
+.stTabs [role="tab"][data-selected="true"] p {{ color: {NAVY}; font-weight: 600; }}
+.stTabs .react-aria-SelectionIndicator {{ height: 3px; border-radius: 2px 2px 0 0; background: {NAVY}; }}
+.stTabs [data-baseweb="tab-highlight"] {{ height: 3px; background: {NAVY}; }}
 h3 {{ font-size: 1.02rem; color: {INK}; margin-top: 1.1rem; }}
 [data-testid="stColumn"] h3 {{ font-size: .95rem; line-height: 1.25; min-height: 2.5em;
     margin-top: .6rem; margin-bottom: .4rem; }}
